@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 44, 54, 57;
+  --background-end-rgb: 36, 46, 49;
+}
+
+/* 添加渐变背景 */
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+  font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white dark:bg-accent dark:text-dark hover:bg-opacity-90 focus:ring-primary dark:focus:ring-accent;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-opacity-90 focus:ring-secondary;
+  }
+
+  .card {
+    @apply bg-white dark:bg-dark/80 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl;
+  }
+
+  .api-card {
+    @apply card p-6 hover:transform hover:scale-[1.02] cursor-pointer dark:border dark:border-gray-700/30;
+  }
+
+  .glassmorphism {
+    @apply bg-white dark:bg-dark bg-opacity-20 dark:bg-opacity-20 backdrop-filter backdrop-blur-lg border border-white dark:border-gray-700 border-opacity-20 dark:border-opacity-20 shadow-lg;
+  }
+}
+
+/* 添加动画效果 */
+.hover-raise {
+  transition: transform 0.3s ease-out;
+}
+
+.hover-raise:hover {
+  transform: translateY(-6px);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+} 
