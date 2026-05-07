@@ -97,8 +97,8 @@
 
 ```bash
 # 方式一：Git 克隆
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/zhyzy/pictureAPI.git
+cd pictureAPI
 
 # 方式二：直接解压项目压缩包后进入目录
 ```
@@ -545,7 +545,7 @@ npm start   # 或通过面板重启
 
 ## 📄 License
 
-[MIT](./LICENSE) © 2024 樱道 API
+[MIT](./LICENSE) © 2026 樱道 API& 智晓科创
 
 ---
 
