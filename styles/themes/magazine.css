@@ -1,0 +1,326 @@
+/* === 杂志风 - 编辑排版 === */
+[data-theme="magazine"] {
+  --color-bg: #fefefe;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #f7f7f7;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-tertiary: #8a8a8a;
+  --color-border: #e0e0e0;
+  --color-border-subtle: #f0f0f0;
+  
+  /* 主色 - 经典黑 */
+  --color-primary: #1a1a1a;
+  --color-primary-hover: #333333;
+  --color-primary-subtle: #f0f0f0;
+  
+  /* 字体 */
+  --font-serif: "Playfair Display", "Noto Serif SC", Georgia, serif;
+  --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* === 杂志背景 - 大胆色块 === */
+[data-theme="magazine"] body {
+  background-color: #fefefe;
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  position: relative;
+}
+
+/* 装饰色块 */
+[data-theme="magazine"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.02) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="magazine"] body::after {
+  content: 'MAGAZINE';
+  position: fixed;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(26, 26, 26, 0.02);
+  letter-spacing: 20px;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* === 杂志卡片 - 无边框大胆排版 === */
+[data-theme="magazine"] .card {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  padding: 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片悬停效果 */
+[data-theme="magazine"] .card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #1a1a1a;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+[data-theme="magazine"] .card:hover::before {
+  transform: scaleX(1);
+}
+
+[data-theme="magazine"] .card:hover {
+  border-bottom-color: #1a1a1a;
+}
+
+/* === 杂志按钮 - 大写粗体 === */
+[data-theme="magazine"] .btn-primary {
+  background: #1a1a1a;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  padding: 12px 24px;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 按钮装饰 */
+[data-theme="magazine"] .btn-primary::before {
+  content: '→';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s, right 0.3s;
+}
+
+[data-theme="magazine"] .btn-primary:hover::before {
+  opacity: 1;
+  right: 15px;
+}
+
+[data-theme="magazine"] .btn-primary:hover {
+  background: #333333;
+  padding-right: 40px;
+}
+
+/* 次要按钮 */
+[data-theme="magazine"] .btn-secondary {
+  border: 1px solid #1a1a1a;
+  border-radius: 0;
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  padding: 12px 24px;
+  font-weight: 600;
+}
+
+[data-theme="magazine"] .btn-secondary:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* === 杂志输入框 - 下划线风格 === */
+[data-theme="magazine"] .input {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 1rem;
+}
+
+[data-theme="magazine"] .input:focus {
+  border-bottom-color: #1a1a1a;
+  box-shadow: none;
+  background: rgba(26, 26, 26, 0.02);
+  padding: 12px;
+}
+
+/* === 杂志标题 - 粗体大字 === */
+[data-theme="magazine"] h1 {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* 标题装饰线 */
+[data-theme="magazine"] h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: #1a1a1a;
+}
+
+[data-theme="magazine"] h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+[data-theme="magazine"] h2::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #1a1a1a;
+}
+
+[data-theme="magazine"] h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* === 杂志徽章 === */
+[data-theme="magazine"] .badge {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0;
+}
+
+[data-theme="magazine"] .badge-primary {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="magazine"] main,
+[data-theme="magazine"] .container,
+[data-theme="magazine"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 杂志反转暗色（纯黑底白字）=== */
+[data-theme="magazine"].dark {
+  --color-bg: #0a0a0a;
+  --color-bg-elevated: #141414;
+  --color-bg-subtle: #0f0f0f;
+  --color-text: #f5f5f5;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary: #666666;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #1a1a1a;
+  --color-primary: #ffffff;
+  --color-primary-hover: #e0e0e0;
+  --color-primary-subtle: #1a1a1a;
+}
+
+[data-theme="magazine"].dark body {
+  background-color: #0a0a0a;
+}
+
+[data-theme="magazine"].dark body::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+}
+
+[data-theme="magazine"].dark body::after {
+  color: rgba(255, 255, 255, 0.015);
+}
+
+[data-theme="magazine"].dark .card {
+  border-bottom-color: var(--color-border);
+  background: transparent;
+}
+
+[data-theme="magazine"].dark .card:hover {
+  border-bottom-color: #ffffff;
+}
+
+[data-theme="magazine"].dark .card::before {
+  background: #ffffff;
+}
+
+[data-theme="magazine"].dark .btn-primary {
+  background: #ffffff;
+  color: #000000;
+}
+
+[data-theme="magazine"].dark .btn-primary::before {
+  content: '→';
+  color: #000000;
+}
+
+[data-theme="magazine"].dark .btn-primary:hover {
+  background: #e0e0e0;
+  color: #000000;
+}
+
+[data-theme="magazine"].dark .btn-secondary {
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+  background: transparent;
+}
+
+[data-theme="magazine"].dark .btn-secondary:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+[data-theme="magazine"].dark .input {
+  background: rgba(20, 20, 20, 0.8);
+  border-bottom-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="magazine"].dark .input:focus {
+  border-bottom-color: #ffffff;
+  background: rgba(30, 30, 30, 0.9);
+}
+
+[data-theme="magazine"].dark h1,
+[data-theme="magazine"].dark h2,
+[data-theme="magazine"].dark h3 {
+  color: #f5f5f5;
+}
+
+[data-theme="magazine"].dark h1::after {
+  background: #ffffff;
+}
+
+[data-theme="magazine"].dark h2::before {
+  background: #ffffff;
+}
+
+[data-theme="magazine"].dark .badge-primary {
+  background: #ffffff;
+  color: #000000;
+}

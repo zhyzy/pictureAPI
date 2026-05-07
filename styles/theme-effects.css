@@ -1,0 +1,430 @@
+/* === 全局动画定义 === */
+
+/* 樱花飘落动画 - 用于二次元主题 */
+@keyframes sakura-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) translateX(100px);
+    opacity: 0;
+  }
+}
+
+/* 粒子浮动动画 - 用于科技感主题 */
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-100px) translateX(50px);
+  }
+  100% {
+    transform: translateY(-200px) translateX(-30px);
+    opacity: 0;
+  }
+}
+
+/* 网格线动画 - 用于科技感和赛博朋克 */
+@keyframes grid-scroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* 霓虹发光脉冲 - 用于科技感和赛博朋克 */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--neon-color, #58a6ff),
+                0 0 10px var(--neon-color, #58a6ff),
+                0 0 15px var(--neon-color, #58a6ff);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--neon-color, #58a6ff),
+                0 0 20px var(--neon-color, #58a6ff),
+                0 0 30px var(--neon-color, #58a6ff),
+                0 0 40px var(--neon-color, #58a6ff);
+  }
+}
+
+/* 波浪动画 - 用于海洋蓝主题 */
+@keyframes wave-flow {
+  0% {
+    transform: translateX(0) translateZ(0);
+  }
+  100% {
+    transform: translateX(-50%) translateZ(0);
+  }
+}
+
+/* 气泡上升动画 - 用于海洋蓝主题 */
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* 叶子飘落动画 - 用于自然绿主题 */
+@keyframes leaf-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg) translateX(0) skewX(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(25vh) rotate(90deg) translateX(30px) skewX(5deg);
+  }
+  50% {
+    transform: translateY(50vh) rotate(180deg) translateX(-20px) skewX(-3deg);
+  }
+  75% {
+    transform: translateY(75vh) rotate(270deg) translateX(40px) skewX(4deg);
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg) translateX(-10px) skewX(0deg);
+    opacity: 0.3;
+  }
+}
+
+/* 扫描线效果 - 用于赛博朋克 */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* 故障效果 - 用于赛博朋克 */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* 表情浮动动画 - 用于二次元主题 */
+@keyframes emoji-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  75% {
+    transform: translateY(10px) rotate(-5deg);
+  }
+}
+
+/* 噪点纹理动画 - 用于复古主题 */
+@keyframes noise {
+  0% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -5%);
+  }
+  20% {
+    transform: translate(-10%, 5%);
+  }
+  30% {
+    transform: translate(5%, -10%);
+  }
+  40% {
+    transform: translate(-5%, 15%);
+  }
+  50% {
+    transform: translate(-10%, 5%);
+  }
+  60% {
+    transform: translate(15%, 0);
+  }
+  70% {
+    transform: translate(0, 10%);
+  }
+  80% {
+    transform: translate(-15%, 0);
+  }
+  90% {
+    transform: translate(10%, 5%);
+  }
+  100% {
+    transform: translate(5%, 0);
+  }
+}
+
+/* 按钮悬停放大效果 */
+@keyframes btn-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 卡片悬停发光效果 */
+@keyframes card-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 107, 157, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 107, 157, 0.4),
+                0 0 40px rgba(255, 107, 157, 0.1);
+  }
+}
+
+/* 复古胶片颗粒 */
+@keyframes film-grain {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  30% {
+    transform: translate(7%, -25%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  50% {
+    transform: translate(-15%, 10%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  70% {
+    transform: translate(0%, 15%);
+  }
+  80% {
+    transform: translate(-15%, 10%);
+  }
+  90% {
+    transform: translate(10%, 20%);
+  }
+}
+
+/* === 主题特效基础类 === */
+
+/* 粒子容器 */
+.theme-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.theme-particles .particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: float-particle 8s infinite ease-in-out;
+}
+
+/* 樱花容器 */
+.theme-sakura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.theme-sakura .petal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, #ffb7c5 0%, #ff8fab 100%);
+  border-radius: 50% 0 50% 0;
+  animation: sakura-fall 10s infinite linear;
+  opacity: 0.7;
+}
+
+/* 波浪容器 */
+.theme-waves {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 200px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.1;
+}
+
+.theme-waves svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  animation: wave-flow 10s infinite linear;
+}
+
+/* 扫描线 */
+.theme-scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 0, 0.03) 2px,
+    rgba(0, 255, 0, 0.03) 4px
+  );
+}
+
+.theme-scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
+  animation: scanline 8s linear infinite;
+}
+
+/* 叶子容器 */
+.theme-leaves {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.theme-leaves .leaf {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #4ade80;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  animation: leaf-fall 15s infinite ease-in-out;
+  opacity: 0.6;
+}
+
+/* 气泡容器 */
+.theme-bubbles {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.theme-bubbles .bubble {
+  position: absolute;
+  bottom: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(0, 150, 255, 0.2));
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  animation: bubble-rise linear infinite;
+}
+
+/* 表情浮动 */
+.theme-emojis {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.theme-emojis .floating-emoji {
+  position: absolute;
+  font-size: 24px;
+  animation: emoji-float 6s ease-in-out infinite;
+  opacity: 0.15;
+}
+
+/* 网格背景 */
+.theme-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.05;
+  background-image: 
+    linear-gradient(var(--grid-color, #58a6ff) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color, #58a6ff) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-scroll 20s linear infinite;
+}
+
+/* 确保内容在特效之上 */
+body > div:first-child,
+#__next,
+main,
+.container {
+  position: relative;
+  z-index: 10;
+}

@@ -1,0 +1,223 @@
+/* === 科技风 - 深色代码感 === */
+[data-theme="tech"] {
+  --color-bg: #0d1117;
+  --color-bg-elevated: #161b22;
+  --color-bg-subtle: #0d1117;
+  --color-text: #e6edf3;
+  --color-text-secondary: #8b949e;
+  --color-text-tertiary: #6e7681;
+  --color-border: #30363d;
+  --color-border-subtle: #21262d;
+  
+  /* 主色 - 科技蓝 */
+  --color-primary: #58a6ff;
+  --color-primary-hover: #79c0ff;
+  --color-primary-subtle: #1c2128;
+  
+  /* 字体 */
+  --font-serif: "JetBrains Mono", "Fira Code", monospace;
+  --font-sans: "Inter", "SF Pro Display", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 1px rgba(48,54,61,0.5);
+  --shadow-soft: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(48,54,61,0.5);
+  --shadow-medium: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(48,54,61,0.5);
+}
+
+/* === 科技感背景 - 网格 + 粒子 === */
+[data-theme="tech"] body {
+  background: 
+    linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+  position: relative;
+}
+
+[data-theme="tech"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(88, 166, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 166, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="tech"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(2px 2px at 20% 30%, rgba(88, 166, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 40% 70%, rgba(88, 166, 255, 0.2), transparent),
+    radial-gradient(2px 2px at 60% 40%, rgba(88, 166, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 80% 10%, rgba(88, 166, 255, 0.15), transparent),
+    radial-gradient(2px 2px at 10% 80%, rgba(88, 166, 255, 0.2), transparent);
+  pointer-events: none;
+  z-index: 0;
+  animation: tech-particles 20s linear infinite;
+}
+
+@keyframes tech-particles {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-50px, -50px); }
+}
+
+/* === 科技感卡片 === */
+[data-theme="tech"] .card {
+  border: 1px solid var(--color-border);
+  background: rgba(22, 27, 34, 0.9);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="tech"] .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #58a6ff, transparent);
+  animation: card-shimmer 3s infinite;
+}
+
+@keyframes card-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* === 科技感按钮 === */
+[data-theme="tech"] .btn-primary {
+  background: linear-gradient(135deg, #58a6ff 0%, #1f6feb 100%);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="tech"] .btn-primary::before {
+  content: '▸';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+[data-theme="tech"] .btn-primary:hover {
+  box-shadow: 0 0 30px rgba(88, 166, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* === 科技感输入框 === */
+[data-theme="tech"] .input {
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+}
+
+[data-theme="tech"] .input:focus {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 0 20px rgba(88, 166, 255, 0.1);
+}
+
+/* === 科技感代码块 === */
+[data-theme="tech"] code {
+  background: rgba(88, 166, 255, 0.1);
+  color: #58a6ff;
+  font-family: var(--font-mono);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+}
+
+[data-theme="tech"] pre {
+  background: rgba(13, 17, 23, 0.9);
+  border: 1px solid var(--color-border);
+  position: relative;
+}
+
+[data-theme="tech"] pre::before {
+  content: '● ● ●';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  color: #ff5f56;
+  font-size: 12px;
+  letter-spacing: 5px;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="tech"] main,
+[data-theme="tech"] .container,
+[data-theme="tech"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 科技风暗色（更深邃）=== */
+[data-theme="tech"].dark {
+  --color-bg: #080c10;
+  --color-bg-elevated: #0d1117;
+  --color-bg-subtle: #080c10;
+  --color-text: #e6edf3;
+  --color-text-secondary: #9ca8b3;
+  --color-text-tertiary: #6e7681;
+  --color-border: #21262d;
+  --color-border-subtle: #161b22;
+  --color-primary: #58a6ff;
+  --color-primary-hover: #79c0ff;
+  --color-primary-subtle: #0d1117;
+}
+
+[data-theme="tech"].dark body {
+  background:
+    linear-gradient(135deg, #080c10 0%, #0d1117 100%);
+}
+
+[data-theme="tech"].dark body::before {
+  background-image:
+    linear-gradient(rgba(88, 166, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 166, 255, 0.04) 1px, transparent 1px);
+}
+
+[data-theme="tech"].dark body::after {
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(88, 166, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 40% 70%, rgba(88, 166, 255, 0.25), transparent),
+    radial-gradient(2px 2px at 60% 40%, rgba(88, 166, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 80% 10%, rgba(88, 166, 255, 0.2), transparent),
+    radial-gradient(2px 2px at 10% 80%, rgba(88, 166, 255, 0.25), transparent);
+}
+
+[data-theme="tech"].dark .card {
+  border-color: var(--color-border);
+  background: rgba(13, 17, 23, 0.95);
+}
+
+[data-theme="tech"].dark .btn-primary {
+  box-shadow: 0 0 25px rgba(88, 166, 255, 0.3);
+}
+
+[data-theme="tech"].dark .btn-primary:hover {
+  box-shadow: 0 0 40px rgba(88, 166, 255, 0.5);
+}
+
+[data-theme="tech"].dark .input {
+  background: rgba(8, 12, 16, 0.9);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="tech"].dark pre {
+  background: rgba(8, 12, 16, 0.95);
+}

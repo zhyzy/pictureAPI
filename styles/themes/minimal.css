@@ -1,0 +1,300 @@
+/* === 极简风 - 纯粹留白 === */
+[data-theme="minimal"] {
+  --color-bg: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #fafafa;
+  --color-text: #000000;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-border: #eeeeee;
+  --color-border-subtle: #f5f5f5;
+  
+  /* 主色 - 纯黑 */
+  --color-primary: #000000;
+  --color-primary-hover: #333333;
+  --color-primary-subtle: #f5f5f5;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 - 极简无阴影 */
+  --shadow-subtle: none;
+  --shadow-soft: none;
+  --shadow-medium: none;
+}
+
+/* === 极简背景 - 纯净留白 === */
+[data-theme="minimal"] body {
+  background-color: #ffffff;
+  font-family: var(--font-sans);
+  position: relative;
+}
+
+/* 微妙的十字线装饰 */
+[data-theme="minimal"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
+  background-size: 100px 100px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 点缀圆点 */
+[data-theme="minimal"] body::after {
+  content: '○';
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  font-size: 60px;
+  color: rgba(0, 0, 0, 0.02);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === 极简卡片 - 无装饰 === */
+[data-theme="minimal"] .card {
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="minimal"] .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: #000000;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease;
+}
+
+[data-theme="minimal"] .card:hover::before {
+  transform: scaleY(1);
+}
+
+[data-theme="minimal"] .card:hover {
+  border-color: #000000;
+  transform: none;
+  box-shadow: none;
+}
+
+/* === 极简按钮 - 黑白对比 === */
+[data-theme="minimal"] .btn-primary {
+  background: #000000;
+  border-radius: 0;
+  border: 1px solid #000000;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="minimal"] .btn-primary::before {
+  content: '→';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%) translateX(20px);
+  font-size: 14px;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+[data-theme="minimal"] .btn-primary:hover::before {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+[data-theme="minimal"] .btn-primary:hover {
+  background: #000000;
+  color: #ffffff;
+  padding-right: 40px;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 次要按钮 */
+[data-theme="minimal"] .btn-secondary {
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  font-weight: 400;
+}
+
+[data-theme="minimal"] .btn-secondary:hover {
+  border-color: #000000;
+  background: transparent;
+  color: #000000;
+}
+
+/* === 极简输入框 - 下划线风格 === */
+[data-theme="minimal"] .input {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 0.875rem;
+}
+
+[data-theme="minimal"] .input:focus {
+  border-bottom-color: #000000;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.01);
+  padding: 12px;
+}
+
+/* === 极简标题 - 粗体大字 === */
+[data-theme="minimal"] h1,
+[data-theme="minimal"] h2,
+[data-theme="minimal"] h3 {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+[data-theme="minimal"] h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 40px;
+  height: 1px;
+  background: #000000;
+}
+
+/* === 极简徽章 - 简约边框 === */
+[data-theme="minimal"] .badge {
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="minimal"] .badge-primary {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="minimal"] main,
+[data-theme="minimal"] .container,
+[data-theme="minimal"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 极简纯黑 === */
+[data-theme="minimal"].dark {
+  --color-bg: #000000;
+  --color-bg-elevated: #0a0a0a;
+  --color-bg-subtle: #050505;
+  --color-text: #ffffff;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary: #666666;
+  --color-border: #222222;
+  --color-border-subtle: #141414;
+  --color-primary: #ffffff;
+  --color-primary-hover: #e0e0e0;
+  --color-primary-subtle: #1a1a1a;
+}
+
+[data-theme="minimal"].dark body {
+  background-color: #000000;
+}
+
+[data-theme="minimal"].dark body::before {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+[data-theme="minimal"].dark body::after {
+  color: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="minimal"].dark .card {
+  border-color: var(--color-border);
+  background: #0a0a0a;
+}
+
+[data-theme="minimal"].dark .card::before {
+  background: #ffffff;
+}
+
+[data-theme="minimal"].dark .card:hover {
+  border-color: #ffffff;
+}
+
+[data-theme="minimal"].dark .btn-primary {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+}
+
+[data-theme="minimal"].dark .btn-primary::before {
+  content: '→';
+  color: #000000;
+}
+
+[data-theme="minimal"].dark .btn-primary:hover {
+  background: #e0e0e0;
+  border-color: #e0e0e0;
+  color: #000000;
+}
+
+[data-theme="minimal"].dark .btn-secondary {
+  border-color: var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+[data-theme="minimal"].dark .btn-secondary:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+[data-theme="minimal"].dark .input {
+  background: transparent;
+  border-bottom-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="minimal"].dark .input:focus {
+  border-bottom-color: #ffffff;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="minimal"].dark h1,
+[data-theme="minimal"].dark h2,
+[data-theme="minimal"].dark h3 {
+  color: #ffffff;
+}
+
+[data-theme="minimal"].dark h1::after {
+  background: #ffffff;
+}
+
+[data-theme="minimal"].dark .badge-primary {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}

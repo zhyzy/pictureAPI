@@ -1,0 +1,260 @@
+/* === 自然风 - 绿色有机 === */
+[data-theme="nature"] {
+  --color-bg: #f0fdf4;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #dcfce7;
+  --color-text: #14532d;
+  --color-text-secondary: #166534;
+  --color-text-tertiary: #22c55e;
+  --color-border: #bbf7d0;
+  --color-border-subtle: #dcfce7;
+  
+  /* 主色 - 自然绿 */
+  --color-primary: #16a34a;
+  --color-primary-hover: #15803d;
+  --color-primary-subtle: #dcfce7;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 1px 3px rgba(22, 163, 74, 0.1);
+  --shadow-soft: 0 4px 12px rgba(22, 163, 74, 0.15);
+  --shadow-medium: 0 8px 24px rgba(22, 163, 74, 0.2);
+}
+
+/* === 自然背景 - 叶子图案 === */
+[data-theme="nature"] body {
+  background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 50%, #f0fdf4 100%);
+  position: relative;
+}
+
+/* 叶子装饰背景 */
+[data-theme="nature"] body::before {
+  content: '🍃 🌿 ☘️ 🍀 🌱';
+  position: fixed;
+  top: 10%;
+  left: 5%;
+  font-size: 60px;
+  opacity: 0.03;
+  letter-spacing: 100px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  animation: nature-leaves-float 15s ease-in-out infinite;
+}
+
+@keyframes nature-leaves-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -20px) rotate(5deg); }
+  50% { transform: translate(-10px, 10px) rotate(-3deg); }
+  75% { transform: translate(15px, 15px) rotate(4deg); }
+}
+
+/* 光影效果 */
+[data-theme="nature"] body::after {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(22, 163, 74, 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(34, 197, 94, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: nature-light 20s ease-in-out infinite;
+}
+
+@keyframes nature-light {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-20px, -20px); }
+}
+
+/* === 自然卡片 === */
+[data-theme="nature"] .card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片上的叶子装饰 */
+[data-theme="nature"] .card::before {
+  content: '🌿';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  opacity: 0.15;
+  animation: leaf-sway 3s ease-in-out infinite;
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(10deg); }
+}
+
+[data-theme="nature"] .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(22, 163, 74, 0.2);
+  border-color: #16a34a;
+}
+
+/* === 自然按钮 === */
+[data-theme="nature"] .btn-primary {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  position: relative;
+  padding-left: 35px;
+  overflow: hidden;
+}
+
+/* 按钮上的叶子装饰 */
+[data-theme="nature"] .btn-primary::before {
+  content: '🌱';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+[data-theme="nature"] .btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+[data-theme="nature"] .btn-primary:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+[data-theme="nature"] .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+  transform: translateY(-2px);
+}
+
+/* === 自然输入框 === */
+[data-theme="nature"] .input {
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.9);
+  padding-left: 35px;
+}
+
+[data-theme="nature"] .input::before {
+  content: '🌿';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+[data-theme="nature"] .input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2), 0 0 20px rgba(22, 163, 74, 0.1);
+  transform: translateY(-1px);
+}
+
+/* === 自然标题 === */
+[data-theme="nature"] h1,
+[data-theme="nature"] h2,
+[data-theme="nature"] h3 {
+  color: #16a34a;
+}
+
+[data-theme="nature"] h1::after,
+[data-theme="nature"] h2::after {
+  content: ' 🍃';
+  font-size: 0.7em;
+  opacity: 0.4;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="nature"] main,
+[data-theme="nature"] .container,
+[data-theme="nature"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 自然森林暗色 === */
+[data-theme="nature"].dark {
+  --color-bg: #0a1f0e;
+  --color-bg-elevated: #142e18;
+  --color-bg-subtle: #0f2812;
+  --color-text: #dcfce7;
+  --color-text-secondary: #86bc8d;
+  --color-text-tertiary: #4ade80;
+  --color-border: #1f4a28;
+  --color-border-subtle: #163820;
+  --color-primary: #4ade80;
+  --color-primary-hover: #86efac;
+  --color-primary-subtle: #0f3816;
+}
+
+[data-theme="nature"].dark body {
+  background:
+    linear-gradient(180deg, #0a1f0e 0%, #142e18 50%, #0a1f0e 100%);
+}
+
+[data-theme="nature"].dark body::before {
+  opacity: 0.02;
+}
+
+[data-theme="nature"].dark body::after {
+  background:
+    radial-gradient(circle at 30% 40%, rgba(74, 222, 128, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(34, 197, 94, 0.02) 0%, transparent 50%);
+}
+
+[data-theme="nature"].dark .card {
+  border-color: var(--color-border);
+  background: linear-gradient(135deg, #142e18 0%, #0a1f0e 100%);
+}
+
+[data-theme="nature"].dark .card::before {
+  opacity: 0.12;
+}
+
+[data-theme="nature"].dark .card:hover {
+  box-shadow: 0 8px 25px rgba(74, 222, 128, 0.1);
+  border-color: #4ade80;
+}
+
+[data-theme="nature"].dark .btn-primary {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.25);
+}
+
+[data-theme="nature"].dark .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.35);
+}
+
+[data-theme="nature"].dark .input {
+  background: rgba(10, 31, 14, 0.9);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="nature"].dark h1,
+[data-theme="nature"].dark h2,
+[data-theme="nature"].dark h3 {
+  color: #4ade80;
+}

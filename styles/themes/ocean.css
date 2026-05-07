@@ -1,0 +1,265 @@
+/* === 海洋风 - 蓝色渐变 === */
+[data-theme="ocean"] {
+  --color-bg: #f0f9ff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #e0f2fe;
+  --color-text: #0c4a6e;
+  --color-text-secondary: #0369a1;
+  --color-text-tertiary: #38bdf8;
+  --color-border: #bae6fd;
+  --color-border-subtle: #e0f2fe;
+  
+  /* 主色 - 海洋蓝 */
+  --color-primary: #0284c7;
+  --color-primary-hover: #0369a1;
+  --color-primary-subtle: #e0f2fe;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 2px 8px rgba(2, 132, 199, 0.1);
+  --shadow-soft: 0 4px 16px rgba(2, 132, 199, 0.15);
+  --shadow-medium: 0 8px 32px rgba(2, 132, 199, 0.2);
+}
+
+/* === 海洋背景 - 波浪图案 === */
+[data-theme="ocean"] body {
+  background: 
+    linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+  position: relative;
+}
+
+/* 波浪装饰 */
+[data-theme="ocean"] body::before {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 200px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0,100 C150,150 350,50 600,100 C850,150 1050,50 1200,100 L1200,200 L0,200 Z' fill='%230284c7' opacity='0.05'/%3E%3Cpath d='M0,120 C150,170 350,70 600,120 C850,170 1050,70 1200,120 L1200,200 L0,200 Z' fill='%230284c7' opacity='0.03'/%3E%3C/svg%3E") repeat-x;
+  background-size: 1200px 200px;
+  animation: ocean-wave 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+@keyframes ocean-wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 气泡装饰 */
+[data-theme="ocean"] body::after {
+  content: '○ ○ ○ ○ ○';
+  position: fixed;
+  top: 20%;
+  left: 10%;
+  font-size: 40px;
+  color: rgba(2, 132, 199, 0.05);
+  letter-spacing: 100px;
+  pointer-events: none;
+  z-index: 0;
+  animation: bubble-float 8s ease-in-out infinite;
+}
+
+@keyframes bubble-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.1); }
+}
+
+/* === 海洋卡片 === */
+[data-theme="ocean"] .card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片上的水波纹装饰 */
+[data-theme="ocean"] .card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(2, 132, 199, 0.03) 0%, transparent 50%);
+  animation: water-ripple 6s ease-in-out infinite;
+}
+
+@keyframes water-ripple {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+[data-theme="ocean"] .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.2);
+  border-color: #0284c7;
+}
+
+/* === 海洋按钮 === */
+[data-theme="ocean"] .btn-primary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+  position: relative;
+  padding-left: 35px;
+  overflow: hidden;
+}
+
+/* 按钮上的波浪装饰 */
+[data-theme="ocean"] .btn-primary::before {
+  content: '∼';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+[data-theme="ocean"] .btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+[data-theme="ocean"] .btn-primary:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+[data-theme="ocean"] .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+  transform: translateY(-2px);
+}
+
+/* === 海洋输入框 === */
+[data-theme="ocean"] .input {
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.9);
+  padding-left: 35px;
+}
+
+[data-theme="ocean"] .input::before {
+  content: '⌕';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0284c7;
+}
+
+[data-theme="ocean"] .input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2), 0 0 20px rgba(2, 132, 199, 0.1);
+  transform: translateY(-1px);
+}
+
+/* === 海洋标题 === */
+[data-theme="ocean"] h1,
+[data-theme="ocean"] h2,
+[data-theme="ocean"] h3 {
+  color: #0284c7;
+}
+
+[data-theme="ocean"] h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #0284c7, transparent);
+  border-radius: 3px;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="ocean"] main,
+[data-theme="ocean"] .container,
+[data-theme="ocean"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 海洋深蓝暗色 === */
+[data-theme="ocean"].dark {
+  --color-bg: #0a1628;
+  --color-bg-elevated: #132238;
+  --color-bg-subtle: #0e1c30;
+  --color-text: #e0f2fe;
+  --color-text-secondary: #7dd3fc;
+  --color-text-tertiary: #38bdf8;
+  --color-border: #1e3a5f;
+  --color-border-subtle: #152a45;
+  --color-primary: #38bdf8;
+  --color-primary-hover: #7dd3fc;
+  --color-primary-subtle: #0c2d48;
+}
+
+[data-theme="ocean"].dark body {
+  background:
+    linear-gradient(180deg, #0a1628 0%, #132238 50%, #0a1628 100%);
+}
+
+[data-theme="ocean"].dark body::before {
+  opacity: 0.4;
+}
+
+[data-theme="ocean"].dark body::after {
+  color: rgba(56, 189, 248, 0.06);
+}
+
+[data-theme="ocean"].dark .card {
+  border-color: var(--color-border);
+  background: linear-gradient(135deg, #132238 0%, #0a1628 100%);
+}
+
+[data-theme="ocean"].dark .card::before {
+  background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.04) 0%, transparent 50%);
+}
+
+[data-theme="ocean"].dark .card:hover {
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.15);
+  border-color: #38bdf8;
+}
+
+[data-theme="ocean"].dark .btn-primary {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="ocean"].dark .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+}
+
+[data-theme="ocean"].dark .input {
+  background: rgba(10, 22, 40, 0.9);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="ocean"].dark h1,
+[data-theme="ocean"].dark h2,
+[data-theme="ocean"].dark h3 {
+  color: #38bdf8;
+}
+
+[data-theme="ocean"].dark h1::after {
+  background: linear-gradient(90deg, #38bdf8, transparent);
+}
