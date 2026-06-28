@@ -8,6 +8,7 @@ interface FooterLink {
 
 interface SiteSettings {
   site_name: string;
+  site_logo: string;
   site_icp: string;
   footer_links: string;
 }
@@ -21,7 +22,7 @@ const defaultFooterLinks: FooterLink[] = [
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const [siteSettings, setSiteSettings] = useState<SiteSettings>({ site_name: '樱道 API', site_icp: '', footer_links: '' });
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>({ site_name: '樱道 API', site_logo: '', site_icp: '', footer_links: '' });
   const [footerLinks, setFooterLinks] = useState<FooterLink[]>(defaultFooterLinks);
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const Footer: React.FC = () => {
         if (data?.settings) {
           setSiteSettings({
             site_name: data.settings.site_name || '樱道 API',
+            site_logo: data.settings.site_logo || '',
             site_icp: data.settings.site_icp || '',
             footer_links: data.settings.footer_links || '',
           });
@@ -75,9 +77,20 @@ const Footer: React.FC = () => {
           {/* Logo & Info */}
           <div className="text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <div className="w-6 h-6 bg-[var(--color-primary)] rounded flex items-center justify-center text-white text-xs font-serif font-bold">
-                {logoChar}
-              </div>
+              {siteSettings.site_logo ? (
+                <img
+                  src={siteSettings.site_logo}
+                  alt={siteSettings.site_name}
+                  className="w-6 h-6 object-contain rounded"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="w-6 h-6 bg-[var(--color-primary)] rounded flex items-center justify-center text-white text-xs font-serif font-bold">
+                  {logoChar}
+                </div>
+              )}
               <span className="font-serif font-bold text-[var(--color-text)]">{siteSettings.site_name}</span>
             </div>
             <p className="text-sm text-[var(--color-text-tertiary)]">

@@ -1,6 +1,7 @@
 // pages/api/admin/settings.js
 import { getDbAsync } from '../../../lib/db';
 import { withAdminAuth } from '../../../lib/auth';
+import { getStorageStatus } from '../../../lib/storage';
 
 async function handler(req, res) {
   try {
@@ -12,7 +13,7 @@ async function handler(req, res) {
       for (const setting of settings) {
         settingsObj[setting.key] = setting.value;
       }
-      return res.status(200).json({ settings: settingsObj });
+      return res.status(200).json({ settings: settingsObj, storage: getStorageStatus() });
     }
 
     if (req.method === 'PUT') {

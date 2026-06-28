@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 interface Image {
   id: number;
@@ -18,6 +19,7 @@ interface Category {
 }
 
 export default function GalleryPage() {
+  const siteSettings = useSiteSettings();
   const [images, setImages] = useState<Image[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -68,8 +70,8 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>图库 - 樱道 API</title>
-        <meta name="description" content="樱道 API 图库" />
+        <title>图库 - {siteSettings.site_name}</title>
+        <meta name="description" content={`${siteSettings.site_name}图库`} />
       </Head>
 
       <Header />
@@ -82,7 +84,7 @@ export default function GalleryPage() {
               图片图库
             </h1>
             <p className="text-[var(--color-text-secondary)]">
-              探索樱道 API 的图片收藏
+              探索{siteSettings.site_name}的图片收藏
             </p>
           </div>
 

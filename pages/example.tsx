@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 interface ApiResponse {
   url: string;
@@ -17,6 +18,7 @@ interface Category {
 }
 
 const ExamplePage = () => {
+  const siteSettings = useSiteSettings();
   const [selectedCategory, setSelectedCategory] = useState('anime');
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +101,7 @@ const ExamplePage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>API体验 - 樱道 API</title>
+        <title>API体验 - {siteSettings.site_name}</title>
       </Head>
 
       <Header />
@@ -112,7 +114,7 @@ const ExamplePage = () => {
               API 体验
             </h1>
             <p className="text-[var(--color-text-secondary)]">
-              输入 API Key，选择分类，立即体验樱道 API
+              输入 API Key，选择分类，立即体验{siteSettings.site_name}
             </p>
           </div>
 

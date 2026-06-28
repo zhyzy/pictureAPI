@@ -10,8 +10,14 @@ interface ApiCardProps {
 const ApiCard: React.FC<ApiCardProps> = ({ api, index }) => {
   const [copied, setCopied] = useState(false);
 
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText(api.url);
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(api.url);
+    } catch (error) {
+      console.warn('复制接口地址失败:', error);
+      return;
+    }
+
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

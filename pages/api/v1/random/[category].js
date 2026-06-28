@@ -1,6 +1,6 @@
 // pages/api/v1/random/[category].js - 公开API：获取随机图片（需 API Key）
 import { getDbAsync } from '../../../../lib/db';
-import { getFileUrl } from '../../../../lib/cos';
+import { getStoredFileUrl } from '../../../../lib/storage';
 
 function getApiKey(req) {
   const headerKey = req.headers['x-api-key'] || req.headers['X-API-Key'];
@@ -99,9 +99,9 @@ export default async function handler(req, res) {
     let signedUrl = randomImage.url;
     if (randomImage.cos_key) {
       try {
-        signedUrl = await getFileUrl(randomImage.cos_key, 7200);
+        signedUrl = await getStoredFileUrl(randomImage, 7200);
       } catch (err) {
-        console.error('生成签名URL失败:', err.message);
+        console.error('生成图片URL失败:', err.message);
       }
     }
 

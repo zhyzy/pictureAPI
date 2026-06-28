@@ -12,7 +12,7 @@ async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const { name, slug, description } = req.body;
+      const { name, slug, description, storage_provider } = req.body;
 
       if (!name || !slug) {
         return res.status(400).json({ error: '分类名称name和slug必填' });
@@ -22,8 +22,8 @@ async function handler(req, res) {
 
       try {
         db.run(
-          'INSERT INTO categories (name, slug, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
-          [name, slug, description || null, now, now]
+          'INSERT INTO categories (name, slug, description, storage_provider, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+          [name, slug, description || null, storage_provider || 'inherit', now, now]
         );
 
         const lastId = db.get('SELECT last_insert_rowid() as id');
@@ -38,7 +38,7 @@ async function handler(req, res) {
     }
 
     if (req.method === 'PUT') {
-      const { id, name, slug, description } = req.body;
+      const { id, name, slug, description, storage_provider } = req.body;
 
       if (!id) {
         return res.status(400).json({ error: 'id必填' });
@@ -48,8 +48,8 @@ async function handler(req, res) {
 
       try {
         db.run(
-          'UPDATE categories SET name = ?, slug = ?, description = ?, updated_at = ? WHERE id = ?',
-          [name, slug, description || null, now, id]
+          'UPDATE categories SET name = ?, slug = ?, description = ?, storage_provider = ?, updated_at = ? WHERE id = ?',
+          [name, slug, description || null, storage_provider || 'inherit', now, id]
         );
 
         const category = db.get('SELECT * FROM categories WHERE id = ?', [id]);

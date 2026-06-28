@@ -11,7 +11,9 @@ export default async function handler(req, res) {
 
     const publicKeys = [
       'site_name', 'site_logo', 'site_icp', 'site_theme', 'site_favicon',
-      'hero_tagline', 'hero_title', 'hero_subtitle', 'cta_title',
+      'hero_tagline', 'hero_title', 'hero_subtitle', 'cta_title', 'cta_background_image',
+      'hero_carousel_enabled', 'hero_carousel_mode', 'hero_carousel_interval', 'hero_carousel_height',
+      'hero_carousel_overlay_opacity', 'hero_carousel_slides',
       'footer_links', 'header_links',
     ];
     const settings = {};

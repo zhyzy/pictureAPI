@@ -37,6 +37,8 @@ yarn-error.log*
 # 数据库
 /data/*.db
 /data/*.db-journal
+/backups/
+/public/uploads/
 
 # 工作内存
 /.workbuddy 

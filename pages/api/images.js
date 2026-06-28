@@ -1,6 +1,6 @@
 // pages/api/images.js - 获取图片列表（公开）
 import { getDbAsync } from '../../lib/db';
-import { getFileUrl } from '../../lib/cos';
+import { getStoredFileUrl } from '../../lib/storage';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -38,9 +38,9 @@ export default async function handler(req, res) {
       images.map(async (image) => {
         if (image.cos_key) {
           try {
-            image.url = await getFileUrl(image.cos_key, 7200);
+            image.url = await getStoredFileUrl(image, 7200);
           } catch (err) {
-            console.error('生成签名URL失败:', err.message);
+            console.error('生成图片URL失败:', err.message);
           }
         }
         return image;

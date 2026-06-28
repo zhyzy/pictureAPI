@@ -1,7 +1,7 @@
 // pages/api/admin/upload.js - 图片上传接口（管理员，支持单张/批量）
 import { getDbAsync } from '../../../lib/db';
 import { withAdminAuth } from '../../../lib/auth';
-import { uploadFile } from '../../../lib/cos';
+import { uploadFileToStorage } from '../../../lib/storage';
 
 export const config = {
   api: {
@@ -39,13 +39,13 @@ async function uploadSingleImage(db, image, categoryId, apiId, userId) {
   const extension = type.split('/')[1] || 'png';
   const key = `images/${categoryId || 'uncategorized'}/${randomName}.${extension}`;
 
-  const result = await uploadFile(buffer, key);
+  const result = await uploadFileToStorage(db, buffer, key, categoryId);
   const now = new Date().toISOString();
 
   db.run(
-    `INSERT INTO images (url, cos_key, category_id, api_id, uploaded_by, created_at)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [result.url, result.cosKey, categoryId || null, apiId || null, userId, now]
+    `INSERT INTO images (url, cos_key, storage_provider, category_id, api_id, uploaded_by, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [result.url, result.storageKey, result.provider, categoryId || null, apiId || null, userId, now]
   );
 
   const lastId = db.get('SELECT last_insert_rowid() as id');

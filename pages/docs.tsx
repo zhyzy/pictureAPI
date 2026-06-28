@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { apiInterfaces, apiCategories } from '@/data/apiData';
+import { apiCategories } from '@/data/apiData';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 interface Category {
   id: number;
@@ -11,10 +12,20 @@ interface Category {
   description?: string;
 }
 
+interface ApiInterface {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  category: string;
+}
+
 const ApiDocs = () => {
+  const siteSettings = useSiteSettings();
   const [activeTab, setActiveTab] = useState<string>('快速开始');
   const [copied, setCopied] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [apiList, setApiList] = useState<ApiInterface[]>([]);
 
   // 从 API 动态获取分类列表
   useEffect(() => {
@@ -32,11 +43,45 @@ const ApiDocs = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    const fetchApis = async () => {
+      try {
+        const res = await fetch(`/api/apis?_t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setApiList(data.apis || []);
+        }
+      } catch (e) {
+        console.error('获取API列表失败:', e);
+      }
+    };
+    fetchApis();
+  }, []);
+
   // 获取要显示的分类列表（优先使用动态数据，fallback 到静态数据）
   const displayCategories = categories.length > 0 ? categories : apiCategories;
+  const categoryApis = displayCategories.map((cat) => {
+    const matchedApi = apiList.find((api) => api.category === cat.name || api.url.endsWith(`/${cat.slug}`));
 
-  const copyToClipboard = (text: string, key: string) => {
-    navigator.clipboard.writeText(text);
+    return matchedApi || {
+      id: cat.id,
+      name: `${cat.name}随机图`,
+      url: `/api/v1/random/${cat.slug}`,
+      description: cat.description || `获取${cat.name}分类随机图片`,
+      category: cat.name,
+    };
+  });
+  const extraApis = apiList.filter((api) => !categoryApis.some((item) => item.id === api.id || item.url === api.url));
+  const displayApis = [...categoryApis, ...extraApis];
+
+  const copyToClipboard = async (text: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.warn('复制内容失败:', error);
+      return;
+    }
+
     setCopied(key);
     setTimeout(() => setCopied(null), 2000);
   };
@@ -109,8 +154,8 @@ fetch('https://api.zxiaolin.com/api/v1/random/anime', {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>API文档 - 樱道 API</title>
-        <meta name="description" content="樱道API接口详细文档和使用说明" />
+        <title>API文档 - {siteSettings.site_name}</title>
+        <meta name="description" content={`${siteSettings.site_name}接口详细文档和使用说明`} />
       </Head>
 
       <Header />
@@ -123,7 +168,7 @@ fetch('https://api.zxiaolin.com/api/v1/random/anime', {
               API 文档
             </h1>
             <p className="text-[var(--color-text-secondary)]">
-              了解如何使用樱道 API 获取图片
+              了解如何使用 {siteSettings.site_name} 获取图片
             </p>
           </div>
 
@@ -210,7 +255,7 @@ fetch('https://api.zxiaolin.com/api/v1/random/anime', {
             {/* 接口列表 */}
             {activeTab === '接口列表' && (
               <div className="space-y-3">
-                {apiInterfaces.map((api) => (
+                {displayApis.map((api) => (
                   <div key={api.id} className="card">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-semibold text-[var(--color-text)]">{api.name}</h3>
@@ -219,10 +264,10 @@ fetch('https://api.zxiaolin.com/api/v1/random/anime', {
                     <p className="text-sm text-[var(--color-text-secondary)] mb-3">{api.description}</p>
                     <div className="flex items-center justify-between gap-3">
                       <code className="text-xs font-mono bg-[var(--color-bg-subtle)] px-2 py-1 rounded">
-                        /api/v1/random/{api.category.toLowerCase()}
+                        {api.url}
                       </code>
                       <button
-                        onClick={() => copyToClipboard(`curl -X GET "https://api.zxiaolin.com/api/v1/random/${api.category.toLowerCase()}" -H "X-API-Key: your_api_key"`, `api-${api.id}`)}
+                        onClick={() => copyToClipboard(`curl -X GET "${api.url}" -H "X-API-Key: your_api_key"`, `api-${api.id}`)}
                         className={`text-xs px-3 py-1.5 rounded-md transition-colors ${
                           copied === `api-${api.id}`
                             ? 'bg-success-light text-success-DEFAULT'

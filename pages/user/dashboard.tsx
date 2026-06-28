@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 interface User {
   id: number;
@@ -27,8 +28,11 @@ interface Category {
   slug: string;
 }
 
+const defaultAvatars = ['/avatars/default-cat.png', '/avatars/default-penguin.png'];
+
 export default function UserDashboard() {
   const router = useRouter();
+  const siteSettings = useSiteSettings();
   const [user, setUser] = useState<User | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -56,8 +60,14 @@ export default function UserDashboard() {
   };
 
   // 复制文本到剪贴板
-  const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text);
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.warn('复制内容失败:', error);
+      return;
+    }
+
     setCopyField(field);
     setTimeout(() => setCopyField(''), 2000);
   };
@@ -113,9 +123,15 @@ export default function UserDashboard() {
     router.push('/');
   };
 
-  const copyApiKey = () => {
+  const copyApiKey = async () => {
     if (user?.api_key) {
-      navigator.clipboard.writeText(user.api_key);
+      try {
+        await navigator.clipboard.writeText(user.api_key);
+      } catch (error) {
+        console.warn('复制 API Key 失败:', error);
+        return;
+      }
+
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -208,8 +224,9 @@ export default function UserDashboard() {
     if (user?.avatar && user.avatar.trim()) {
       return user.avatar;
     }
-    // 默认头像
-    return `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'U'}`;
+
+    const id = user?.id || 0;
+    return defaultAvatars[id % defaultAvatars.length];
   };
 
   if (loading) {
@@ -226,7 +243,7 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
       <Head>
-        <title>用户仪表盘 - 樱道 API</title>
+        <title>用户仪表盘 - {siteSettings.site_name}</title>
       </Head>
 
       <Header />
@@ -242,7 +259,7 @@ export default function UserDashboard() {
                 alt="头像"
                 className="w-16 h-16 rounded-full bg-[var(--color-bg-subtle)] border-2 border-[var(--color-border)]"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'U'}`;
+                  (e.target as HTMLImageElement).src = defaultAvatars[0];
                 }}
               />
               <div>

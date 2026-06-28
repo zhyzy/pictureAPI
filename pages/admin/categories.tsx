@@ -6,6 +6,7 @@ interface Category {
   name: string;
   slug: string;
   description: string;
+  storage_provider?: string;
   created_at: string;
 }
 
@@ -14,7 +15,7 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({ name: '', slug: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', slug: '', description: '', storage_provider: 'inherit' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -69,7 +70,7 @@ export default function CategoriesPage() {
       setSuccess(editingCategory ? '分类更新成功' : '分类创建成功');
       setShowModal(false);
       setEditingCategory(null);
-      setFormData({ name: '', slug: '', description: '' });
+      setFormData({ name: '', slug: '', description: '', storage_provider: 'inherit' });
       fetchCategories();
     } catch (err: any) {
       setError(err.message);
@@ -78,7 +79,12 @@ export default function CategoriesPage() {
 
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
-    setFormData({ name: category.name, slug: category.slug, description: category.description || '' });
+    setFormData({
+      name: category.name,
+      slug: category.slug,
+      description: category.description || '',
+      storage_provider: category.storage_provider || 'inherit',
+    });
     setShowModal(true);
   };
 
@@ -111,7 +117,7 @@ export default function CategoriesPage() {
 
   const openCreateModal = () => {
     setEditingCategory(null);
-    setFormData({ name: '', slug: '', description: '' });
+    setFormData({ name: '', slug: '', description: '', storage_provider: 'inherit' });
     setShowModal(true);
   };
 
@@ -152,6 +158,7 @@ export default function CategoriesPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-[var(--color-text-tertiary)] uppercase">ID</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-[var(--color-text-tertiary)] uppercase">名称</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-[var(--color-text-tertiary)] uppercase">Slug</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[var(--color-text-tertiary)] uppercase">存储</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-[var(--color-text-tertiary)] uppercase">描述</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-[var(--color-text-tertiary)] uppercase">操作</th>
               </tr>
@@ -163,6 +170,15 @@ export default function CategoriesPage() {
                   <td className="px-4 py-3 text-sm font-medium text-[var(--color-text)]">{category.name}</td>
                   <td className="px-4 py-3 text-sm">
                     <code className="text-xs bg-[var(--color-bg-subtle)] px-2 py-0.5 rounded">{category.slug}</code>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-[var(--color-text-secondary)]">
+                    {category.storage_provider === 'cos'
+                      ? '腾讯云 COS'
+                      : category.storage_provider === 'local'
+                        ? '本地存储'
+                        : category.storage_provider === 'other'
+                          ? '其他存储'
+                          : '继承默认'}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--color-text-secondary)]">{category.description || '-'}</td>
                   <td className="px-4 py-3 text-right text-sm">
@@ -222,6 +238,20 @@ export default function CategoriesPage() {
                     placeholder="分类描述（可选）"
                     rows={3}
                   />
+                </div>
+                <div>
+                  <label className="label">该分类的存储位置</label>
+                  <select
+                    value={formData.storage_provider}
+                    onChange={(e) => setFormData({ ...formData, storage_provider: e.target.value })}
+                    className="input"
+                  >
+                    <option value="inherit">继承系统默认</option>
+                    <option value="cos">腾讯云 COS</option>
+                    <option value="local">本地存储</option>
+                    <option value="other">其他存储（预留）</option>
+                  </select>
+                  <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">上传到该分类的图片会优先使用这里的设置</p>
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={() => setShowModal(false)} className="btn-secondary text-sm">

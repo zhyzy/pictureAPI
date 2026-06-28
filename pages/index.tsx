@@ -9,6 +9,13 @@ import StatsCard from '@/components/ui/StatsCard';
 import CategoryButton from '@/components/ui/CategoryButton';
 import { apiInterfaces, apiCategories, ApiInterface } from '@/data/apiData';
 
+interface HeroSlide {
+  tagline?: string;
+  title?: string;
+  subtitle?: string;
+  background?: string;
+}
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,8 +26,17 @@ export default function Home() {
     hero_tagline: '',
     hero_title: '',
     hero_subtitle: '',
+    hero_carousel_enabled: 'false',
+    hero_carousel_mode: 'text',
+    hero_carousel_interval: '6000',
+    hero_carousel_height: '460',
+    hero_carousel_overlay_opacity: '72',
+    hero_carousel_slides: '[]',
     cta_title: '',
+    cta_background_image: '',
   });
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
   const [endpointStats, setEndpointStats] = useState<Record<string, number>>({});
   const [apiList, setApiList] = useState<ApiInterface[]>([]);
   const [categories, setCategories] = useState<{id: number, name: string, slug: string}[]>([]);
@@ -82,6 +98,62 @@ export default function Home() {
     }
     return result;
   }, [apisWithStats, selectedCategory, searchTerm]);
+
+  const fallbackHeroSlide = useMemo<HeroSlide>(() => ({
+    tagline: siteSettings.hero_tagline || '图片 API 服务平台',
+    title: siteSettings.hero_title || siteSettings.site_name || '樱道 API',
+    subtitle: siteSettings.hero_subtitle || '稳定、高效的图片接口服务，为你的项目提供丰富的视觉内容。\n支持多种分类，一键接入，即刻使用。',
+    background: '',
+  }), [siteSettings.hero_tagline, siteSettings.hero_title, siteSettings.hero_subtitle, siteSettings.site_name]);
+
+  const heroSlides = useMemo<HeroSlide[]>(() => {
+    if (siteSettings.hero_carousel_enabled !== 'true') {
+      return [fallbackHeroSlide];
+    }
+
+    try {
+      const parsed = JSON.parse(siteSettings.hero_carousel_slides || '[]');
+      if (!Array.isArray(parsed)) return [fallbackHeroSlide];
+
+      const slides = parsed
+        .filter((slide) => slide && typeof slide === 'object')
+        .map((slide) => ({
+          tagline: String(slide.tagline || '').trim(),
+          title: String(slide.title || '').trim(),
+          subtitle: String(slide.subtitle || '').trim(),
+          background: String(slide.background || '').trim(),
+        }))
+        .filter((slide) => slide.tagline || slide.title || slide.subtitle || slide.background);
+
+      return slides.length > 0 ? slides : [fallbackHeroSlide];
+    } catch {
+      return [fallbackHeroSlide];
+    }
+  }, [fallbackHeroSlide, siteSettings.hero_carousel_enabled, siteSettings.hero_carousel_slides]);
+
+  const currentHeroSlide = heroSlides[activeHeroSlide] || heroSlides[0] || fallbackHeroSlide;
+  const heroBackground = siteSettings.hero_carousel_mode === 'full' ? currentHeroSlide.background : '';
+  const heroInterval = Math.max(parseInt(siteSettings.hero_carousel_interval || '6000', 10) || 6000, 3000);
+  const heroHeight = Math.min(Math.max(parseInt(siteSettings.hero_carousel_height || '460', 10) || 460, 320), 760);
+  const heroOverlayOpacity = Math.min(Math.max(parseInt(siteSettings.hero_carousel_overlay_opacity || '72', 10) || 72, 0), 95) / 100;
+  const heroBackgroundStyle = heroBackground ? ({
+    '--hero-bg-image': `url(${heroBackground})`,
+    '--hero-overlay-alpha': heroOverlayOpacity,
+  } as React.CSSProperties) : undefined;
+
+  useEffect(() => {
+    setActiveHeroSlide(0);
+  }, [siteSettings.hero_carousel_enabled, siteSettings.hero_carousel_slides]);
+
+  useEffect(() => {
+    if (siteSettings.hero_carousel_enabled !== 'true' || heroSlides.length <= 1 || isHeroPaused) return;
+
+    const interval = setInterval(() => {
+      setActiveHeroSlide((index) => (index + 1) % heroSlides.length);
+    }, heroInterval);
+
+    return () => clearInterval(interval);
+  }, [heroInterval, heroSlides.length, isHeroPaused, siteSettings.hero_carousel_enabled]);
 
   const fetchEndpointStats = async () => {
     try {
@@ -154,34 +226,49 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>樱道 API - 高质量图片接口服务</title>
+        <title>{siteSettings.site_name || '樱道 API'} - 高质量图片接口服务</title>
         <meta name="description" content="稳定、快速的图片API接口服务，支持动漫、风景、动物等多种分类" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      <Header />
+      <Header overlay={Boolean(heroBackground)} backgroundImage={heroBackground} overlayOpacity={heroOverlayOpacity} />
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+        <div
+          className={`relative overflow-hidden border-b border-[var(--color-border)] ${
+            heroBackground ? 'hero-background-surface' : ''
+          }`}
+          style={heroBackgroundStyle}
+        >
+          <div className="relative">
+            <section
+              className="px-4 sm:px-6 lg:px-8"
+              onMouseEnter={() => setIsHeroPaused(true)}
+              onMouseLeave={() => setIsHeroPaused(false)}
+              style={{ minHeight: `${heroHeight}px` }}
             >
-              <p className="text-sm font-medium tracking-wider text-[var(--color-primary)] uppercase mb-4">
-                {siteSettings.hero_tagline || '图片 API 服务平台'}
-              </p>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[var(--color-text)] mb-6 tracking-tight">
-                {siteSettings.hero_title || siteSettings.site_name || '樱道 API'}
-              </h1>
-              <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed whitespace-pre-line">
-                {siteSettings.hero_subtitle || '稳定、高效的图片接口服务，为你的项目提供丰富的视觉内容。\n支持多种分类，一键接入，即刻使用。'}
-              </p>
-            </motion.div>
+              <div className="max-w-5xl mx-auto text-center flex min-h-[inherit] flex-col items-center justify-center py-10">
+                <motion.div
+                  key={activeHeroSlide}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
+                  className="w-full"
+                >
+                  <p className="hero-foreground-accent text-sm font-medium tracking-wider text-[var(--color-primary)] uppercase mb-4">
+                    {currentHeroSlide.tagline || fallbackHeroSlide.tagline}
+                  </p>
+                  <h1 className="hero-foreground-title text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[var(--color-primary)] mb-6 tracking-tight">
+                    {currentHeroSlide.title || fallbackHeroSlide.title}
+                  </h1>
+                  <p className="hero-foreground-muted text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed whitespace-pre-line">
+                    {currentHeroSlide.subtitle || fallbackHeroSlide.subtitle}
+                  </p>
+                </motion.div>
 
-            <motion.div
+                <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 1, 0.5, 1] }}
@@ -206,9 +293,29 @@ export default function Home() {
                 </svg>
                 浏览图库
               </Link>
-            </motion.div>
+                </motion.div>
+
+                {siteSettings.hero_carousel_enabled === 'true' && heroSlides.length > 1 && (
+                  <div className="mt-8 flex items-center justify-center gap-2">
+                    {heroSlides.map((_, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setActiveHeroSlide(index)}
+                        className={`h-2 rounded-full transition-all ${
+                          activeHeroSlide === index
+                            ? 'w-8 bg-[var(--color-primary)]'
+                            : 'w-2 bg-[var(--color-border)] hover:bg-[var(--color-primary)]/50'
+                        }`}
+                        aria-label={`切换到第 ${index + 1} 张轮播`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
 
         {/* Stats Section */}
         <section className="py-12 border-t border-[var(--color-border)]">
@@ -321,7 +428,12 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-[var(--color-primary)] rounded-xl p-8 sm:p-12 text-white"
+              className="relative overflow-hidden bg-[var(--color-primary)] rounded-xl p-8 sm:p-12 text-white"
+              style={siteSettings.cta_background_image ? {
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.42)), url(${siteSettings.cta_background_image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              } : undefined}
             >
               <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4">
                 {siteSettings.cta_title || `开始使用${siteSettings.site_name || '樱道 API'}`}

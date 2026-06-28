@@ -140,10 +140,10 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 # 腾讯云 SecretId
 # 获取方式：https://console.cloud.tencent.com/cam/capi
-COS_SECRET_ID=your-tencent-cloud-secret-id
+COS_SECRET_ID=your-cos-secret-id
 
 # 腾讯云 SecretKey
-COS_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+COS_SECRET_KEY=your-cos-secret-key
 
 # COS Bucket 名称
 COS_BUCKET=your-bucket-name-1234567890

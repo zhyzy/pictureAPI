@@ -22,12 +22,19 @@ const defaultHeaderLinks: HeaderLink[] = [
 ];
 
 interface User {
+  id?: number;
   username: string;
   email: string;
   avatar?: string;
 }
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  overlay?: boolean;
+  backgroundImage?: string;
+  overlayOpacity?: number;
+}
+
+const Header: React.FC<HeaderProps> = ({ overlay = false, backgroundImage = '', overlayOpacity = 0.72 }) => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -43,6 +50,18 @@ const Header: React.FC = () => {
       const userStr = localStorage.getItem('user');
       if (token && userStr) {
         setUser(JSON.parse(userStr));
+        fetch('/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: 'no-store',
+        })
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data?.user) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+              setUser(data.user);
+            }
+          })
+          .catch(() => {});
       } else {
         setUser(null);
       }
@@ -133,13 +152,44 @@ const Header: React.FC = () => {
   // 用户头像/初始字母
   const userInitial = user ? (user.username ? user.username.charAt(0).toUpperCase() : '?') : '';
 
+  const renderUserAvatar = () => {
+    if (user?.avatar) {
+      return (
+        <img
+          src={user.avatar}
+          alt={user.username}
+          className="w-8 h-8 rounded-full object-cover border border-[var(--color-border)]"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
+        />
+      );
+    }
+
+    return (
+      <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-sm font-bold">
+        {userInitial}
+      </div>
+    );
+  };
+
+  const overlayActive = !scrolled && overlay && backgroundImage;
+  const headerStyle = overlayActive ? ({
+    '--hero-bg-image': `url(${backgroundImage})`,
+    '--hero-overlay-alpha': overlayOpacity,
+    backgroundPosition: 'center top',
+  } as React.CSSProperties) : undefined;
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
           ? 'bg-[var(--color-bg)]/95 backdrop-blur-sm shadow-subtle border-b border-[var(--color-border)]'
-          : 'bg-transparent'
+          : overlayActive
+            ? 'hero-background-surface hero-header-on-image border-b border-[var(--color-border)]'
+            : 'bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)]'
       }`}
+      style={headerStyle}
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
@@ -159,7 +209,7 @@ const Header: React.FC = () => {
                 {logoChar}
               </div>
             )}
-            <span className="text-lg font-serif font-bold text-[var(--color-text)] leading-tight">
+            <span className="hero-header-title text-lg font-serif font-bold text-[var(--color-text)] leading-tight">
               {siteSettings.site_name}
             </span>
           </Link>
@@ -170,7 +220,7 @@ const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors duration-200"
+                className="hero-header-link px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors duration-200"
               >
                 {link.label}
               </Link>
@@ -186,12 +236,10 @@ const Header: React.FC = () => {
               <div className="hidden md:flex items-center relative">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--color-bg-subtle)] transition-colors"
+                  className="hero-header-account flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-[var(--color-bg-subtle)] transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-sm font-bold">
-                    {userInitial}
-                  </div>
-                  <span className="text-sm text-[var(--color-text)] max-w-[100px] truncate">
+                  {renderUserAvatar()}
+                  <span className="hero-header-user text-sm text-[var(--color-text)] max-w-[100px] truncate">
                     {user.username}
                   </span>
                   <svg className="w-3 h-3 text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +279,7 @@ const Header: React.FC = () => {
               <div className="hidden md:flex items-center gap-2 ml-2">
                 <Link
                   href="/auth/login"
-                  className="px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
+                  className="hero-header-link px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
                 >
                   登录
                 </Link>
@@ -246,7 +294,7 @@ const Header: React.FC = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
+              className="hero-header-link md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? '关闭菜单' : '打开菜单'}
             >
@@ -269,7 +317,7 @@ const Header: React.FC = () => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)] rounded-md transition-colors"
+                  className="hero-header-link px-3 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)] rounded-md transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -279,10 +327,8 @@ const Header: React.FC = () => {
               {user ? (
                 <>
                   <div className="flex items-center gap-3 px-3 py-2.5 border-t border-[var(--color-border)] mt-1">
-                    <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center text-sm font-bold">
-                      {userInitial}
-                    </div>
-                    <span className="text-sm text-[var(--color-text)]">{user.username}</span>
+                    {renderUserAvatar()}
+                    <span className="hero-header-user text-sm text-[var(--color-text)]">{user.username}</span>
                   </div>
                   <Link
                     href="/user/dashboard"
@@ -303,7 +349,7 @@ const Header: React.FC = () => {
                   <Link
                     href="/auth/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
+                    className="hero-header-link flex-1 text-center px-4 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] border border-[var(--color-border)] rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
                   >
                     登录
                   </Link>

@@ -1,7 +1,7 @@
 // pages/api/admin/images.js
 import { getDbAsync } from '../../../lib/db';
 import { withAdminAuth } from '../../../lib/auth';
-import { deleteFile, getFileUrl } from '../../../lib/cos';
+import { deleteStoredFile, getStoredFileUrl } from '../../../lib/storage';
 
 async function handler(req, res) {
   try {
@@ -37,9 +37,9 @@ async function handler(req, res) {
         images.map(async (image) => {
           if (image.cos_key) {
             try {
-              image.url = await getFileUrl(image.cos_key, 7200);
+              image.url = await getStoredFileUrl(image, 7200);
             } catch (err) {
-              console.error('生成签名URL失败:', err.message);
+              console.error('生成图片URL失败:', err.message);
             }
           }
           return image;
@@ -50,7 +50,7 @@ async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const { url, cos_key, category_id, api_id } = req.body;
+      const { url, cos_key, storage_provider, category_id, api_id } = req.body;
 
       if (!url) {
         return res.status(400).json({ error: 'url必填' });
@@ -59,9 +59,9 @@ async function handler(req, res) {
       const now = new Date().toISOString();
 
       db.run(
-        `INSERT INTO images (url, cos_key, category_id, api_id, uploaded_by, created_at)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [url, cos_key || null, category_id || null, api_id || null, req.user.id, now]
+        `INSERT INTO images (url, cos_key, storage_provider, category_id, api_id, uploaded_by, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [url, cos_key || null, storage_provider || (cos_key ? 'cos' : 'local'), category_id || null, api_id || null, req.user.id, now]
       );
 
       const lastId = db.get('SELECT last_insert_rowid() as id');
@@ -83,9 +83,9 @@ async function handler(req, res) {
 
       if (image.cos_key) {
         try {
-          await deleteFile(image.cos_key);
+          await deleteStoredFile(image);
         } catch (error) {
-          console.error('删除COS文件失败:', error);
+          console.error('删除存储文件失败:', error);
         }
       }
 

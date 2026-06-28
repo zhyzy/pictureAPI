@@ -1,13 +1,13 @@
 // pages/api/auth/me.js
-import { getCurrentUser } from '../../../lib/auth';
+import { getCurrentUserAsync } from '../../../lib/auth';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: '方法不允许' });
   }
 
   try {
-    const user = getCurrentUser(req);
+    const user = await getCurrentUserAsync(req);
     
     if (!user) {
       return res.status(401).json({ error: '未授权' });

@@ -21,9 +21,29 @@ interface Settings {
   hero_tagline: string;
   hero_title: string;
   hero_subtitle: string;
+  hero_carousel_enabled: string;
+  hero_carousel_mode: string;
+  hero_carousel_interval: string;
+  hero_carousel_height: string;
+  hero_carousel_overlay_opacity: string;
+  hero_carousel_slides: string;
   cta_title: string;
+  cta_background_image: string;
   watermark_enabled: string;
   site_theme: string;
+  storage_provider: string;
+}
+
+interface HeroSlideConfig {
+  tagline: string;
+  title: string;
+  subtitle: string;
+  background: string;
+}
+
+interface LinkConfig {
+  label: string;
+  href: string;
 }
 
 // 主题列表定义
@@ -170,9 +190,36 @@ const defaultSettings: Settings = {
   hero_tagline: '',
   hero_title: '',
   hero_subtitle: '',
+  hero_carousel_enabled: 'true',
+  hero_carousel_mode: 'text',
+  hero_carousel_interval: '6000',
+  hero_carousel_height: '460',
+  hero_carousel_overlay_opacity: '72',
+  hero_carousel_slides: JSON.stringify([
+    {
+      tagline: '图片 API 服务平台',
+      title: '智晓科创图片 API',
+      subtitle: '稳定、高效的图片接口服务，为你的项目提供丰富的视觉内容。\n支持多种分类，一键接入，即刻使用。',
+      background: '',
+    },
+    {
+      tagline: '灵活存储管理',
+      title: '云端与本地都能从容切换',
+      subtitle: '支持腾讯云 COS、本地存储，并可为不同分类单独设置存储位置。',
+      background: '',
+    },
+    {
+      tagline: '快速接入图片服务',
+      title: '用一条接口点亮你的应用',
+      subtitle: '获取 API Key 后即可调用随机图片接口，适合网站、机器人、应用和内容工具。',
+      background: '',
+    },
+  ], null, 2),
   cta_title: '',
+  cta_background_image: '',
   watermark_enabled: 'false',
   site_theme: 'default',
+  storage_provider: 'cos',
 };
 
 // SMTP 快捷预设
@@ -182,6 +229,40 @@ const smtpPresets: Record<string, { host: string; port: string; secure: string }
   outlook: { host: 'smtp.office365.com', port: '587', secure: 'false' },
   gmail: { host: 'smtp.gmail.com', port: '587', secure: 'false' },
 };
+
+function parseArraySetting<T>(value: string, fallback: T[]): T[] {
+  try {
+    const parsed = JSON.parse(value || '[]');
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function stringifySetting(value: unknown) {
+  return JSON.stringify(value, null, 2);
+}
+
+const defaultHeroSlides = [
+  {
+    tagline: '图片 API 服务平台',
+    title: '智晓科创图片 API',
+    subtitle: '稳定、高效的图片接口服务，为你的项目提供丰富的视觉内容。\n支持多种分类，一键接入，即刻使用。',
+    background: '',
+  },
+  {
+    tagline: '灵活存储管理',
+    title: '云端与本地都能从容切换',
+    subtitle: '支持腾讯云 COS、本地存储，并可为不同分类单独设置存储位置。',
+    background: '',
+  },
+  {
+    tagline: '快速接入图片服务',
+    title: '用一条接口点亮你的应用',
+    subtitle: '获取 API Key 后即可调用随机图片接口，适合网站、机器人、应用和内容工具。',
+    background: '',
+  },
+];
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
@@ -194,6 +275,7 @@ export default function SettingsPage() {
   const [testEmail, setTestEmail] = useState('');
   const [testingEmail, setTestingEmail] = useState(false);
   const [testResult, setTestResult] = useState('');
+  const [storageInfo, setStorageInfo] = useState<any>(null);
 
   useEffect(() => {
     fetchSettings();
@@ -209,6 +291,7 @@ export default function SettingsPage() {
       if (res.ok) {
         const data = await res.json();
         setSettings({ ...defaultSettings, ...data.settings });
+        setStorageInfo(data.storage || null);
       }
     } catch (error) {
       console.error('获取设置失败:', error);
@@ -260,6 +343,65 @@ export default function SettingsPage() {
       document.documentElement.setAttribute('data-theme', value);
       localStorage.setItem('site_theme', value);
     }
+  };
+
+  const fillDefaultHeroSlides = () => {
+    setSettings({
+      ...settings,
+      hero_carousel_slides: JSON.stringify(defaultHeroSlides, null, 2),
+      hero_carousel_enabled: 'true',
+    });
+  };
+
+  const formatHeroSlides = () => {
+    try {
+      const parsed = JSON.parse(settings.hero_carousel_slides || '[]');
+      setSettings({ ...settings, hero_carousel_slides: JSON.stringify(parsed, null, 2) });
+      setError('');
+    } catch {
+      setError('头部轮播 JSON 格式错误，请检查逗号、引号和数组结构');
+    }
+  };
+
+  const heroSlides = parseArraySetting<HeroSlideConfig>(settings.hero_carousel_slides, defaultHeroSlides);
+  const footerLinks = parseArraySetting<LinkConfig>(settings.footer_links, []);
+  const headerLinks = parseArraySetting<LinkConfig>(settings.header_links, []);
+
+  const updateHeroSlide = (index: number, key: keyof HeroSlideConfig, value: string) => {
+    const next = [...heroSlides];
+    next[index] = { ...next[index], [key]: value };
+    handleChange('hero_carousel_slides', stringifySetting(next));
+  };
+
+  const addHeroSlide = () => {
+    handleChange('hero_carousel_slides', stringifySetting([
+      ...heroSlides,
+      { tagline: '', title: '', subtitle: '', background: '' },
+    ]));
+  };
+
+  const removeHeroSlide = (index: number) => {
+    handleChange('hero_carousel_slides', stringifySetting(heroSlides.filter((_, i) => i !== index)));
+  };
+
+  const updateLinkList = (key: 'footer_links' | 'header_links', list: LinkConfig[]) => {
+    handleChange(key, stringifySetting(list));
+  };
+
+  const updateLinkItem = (key: 'footer_links' | 'header_links', index: number, field: keyof LinkConfig, value: string) => {
+    const list = key === 'footer_links' ? [...footerLinks] : [...headerLinks];
+    list[index] = { ...list[index], [field]: value };
+    updateLinkList(key, list);
+  };
+
+  const addLinkItem = (key: 'footer_links' | 'header_links') => {
+    const list = key === 'footer_links' ? footerLinks : headerLinks;
+    updateLinkList(key, [...list, { label: '', href: '' }]);
+  };
+
+  const removeLinkItem = (key: 'footer_links' | 'header_links', index: number) => {
+    const list = key === 'footer_links' ? footerLinks : headerLinks;
+    updateLinkList(key, list.filter((_, i) => i !== index));
   };
 
   const applySmtpPreset = (preset: string) => {
@@ -464,7 +606,7 @@ export default function SettingsPage() {
         {/* ===== 网站设置 ===== */}
         <div className="card mb-6">
           <h3 className="text-base font-semibold text-[var(--color-text)] mb-4">网站设置</h3>
-          <div className="space-y-4 max-w-lg">
+          <div className="space-y-4 max-w-5xl">
             <div>
               <label className="label">网站名称</label>
               <input
@@ -579,7 +721,7 @@ export default function SettingsPage() {
                 type="text"
                 value={settings.hero_title}
                 onChange={(e) => handleChange('hero_title', e.target.value)}
-                placeholder="樱道 API"
+                placeholder={settings.site_name || '网站名称'}
                 className="input"
               />
             </div>
@@ -599,9 +741,191 @@ export default function SettingsPage() {
                 type="text"
                 value={settings.cta_title}
                 onChange={(e) => handleChange('cta_title', e.target.value)}
-                placeholder="开始使用樱道 API"
+                placeholder={`开始使用${settings.site_name || '网站名称'}`}
                 className="input"
               />
+            </div>
+            <div>
+              <label className="label">底部号召语背景图</label>
+              <div className="flex gap-3 items-start">
+                <input
+                  type="url"
+                  value={settings.cta_background_image}
+                  onChange={(e) => handleChange('cta_background_image', e.target.value)}
+                  placeholder="https://example.com/cta-bg.jpg 或 /uploads/xxx.jpg"
+                  className="input flex-1"
+                />
+                {settings.cta_background_image && (
+                  <img
+                    src={settings.cta_background_image}
+                    alt="号召语背景预览"
+                    className="w-20 h-12 object-cover rounded border border-[var(--color-border)]"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
+              </div>
+              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">留空使用主题主色背景；填写图片地址后首页底部号召区域会使用该图片</p>
+            </div>
+            <div className="pt-4 border-t border-[var(--color-border)]">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <label className="label">头部区域轮播</label>
+                  <p className="text-xs text-[var(--color-text-tertiary)]">按钮区域会固定保留，只切换轮播内容</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleChange('hero_carousel_enabled', settings.hero_carousel_enabled === 'true' ? 'false' : 'true')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    settings.hero_carousel_enabled === 'true' ? 'bg-[var(--color-primary)]' : 'bg-gray-300 dark:bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      settings.hero_carousel_enabled === 'true' ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+                <div>
+                  <label className="label">轮播模式</label>
+                  <select
+                    value={settings.hero_carousel_mode}
+                    onChange={(e) => handleChange('hero_carousel_mode', e.target.value)}
+                    className="input"
+                  >
+                    <option value="text">只轮播文字</option>
+                    <option value="full">背景和文字一起轮播</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="label">切换间隔（毫秒）</label>
+                  <input
+                    type="number"
+                    min="3000"
+                    step="500"
+                    value={settings.hero_carousel_interval}
+                    onChange={(e) => handleChange('hero_carousel_interval', e.target.value)}
+                    className="input"
+                  />
+                </div>
+                <div>
+                  <label className="label">轮播高度（像素）</label>
+                  <input
+                    type="number"
+                    min="320"
+                    max="760"
+                    step="20"
+                    value={settings.hero_carousel_height}
+                    onChange={(e) => handleChange('hero_carousel_height', e.target.value)}
+                    className="input"
+                  />
+                  <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">首页头部区域会固定为这个高度，文字始终居中显示。</p>
+                </div>
+                <div>
+                  <label className="label">背景透明度（%）</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="95"
+                    step="5"
+                    value={settings.hero_carousel_overlay_opacity}
+                    onChange={(e) => handleChange('hero_carousel_overlay_opacity', e.target.value)}
+                    className="input"
+                  />
+                  <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">数值越大，背景图越淡，文字越清晰。</p>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <div>
+                    <label className="label mb-0">轮播内容</label>
+                    <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+                      每一张轮播由小标题、大标题、描述文字和背景图组成。背景图可为空；选择“背景和文字一起轮播”时才会应用背景图。
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={fillDefaultHeroSlides} className="btn-secondary text-xs px-3 py-1.5">
+                      填入示例
+                    </button>
+                    <button type="button" onClick={addHeroSlide} className="btn-primary text-xs px-3 py-1.5">
+                      新增轮播
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {heroSlides.map((slide, index) => (
+                    <div key={index} className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-sm font-medium text-[var(--color-text)]">第 {index + 1} 张轮播</p>
+                        <button
+                          type="button"
+                          onClick={() => removeHeroSlide(index)}
+                          disabled={heroSlides.length <= 1}
+                          className="text-xs text-error-DEFAULT hover:underline disabled:opacity-40 disabled:no-underline"
+                        >
+                          删除
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="label">小标题</label>
+                          <input
+                            type="text"
+                            value={slide.tagline || ''}
+                            onChange={(e) => updateHeroSlide(index, 'tagline', e.target.value)}
+                            placeholder="例如：图片 API 服务平台"
+                            className="input"
+                          />
+                        </div>
+                        <div>
+                          <label className="label">大标题</label>
+                          <input
+                            type="text"
+                            value={slide.title || ''}
+                            onChange={(e) => updateHeroSlide(index, 'title', e.target.value)}
+                            placeholder="例如：智晓科创图片 API"
+                            className="input"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="label">描述文字</label>
+                          <textarea
+                            value={slide.subtitle || ''}
+                            onChange={(e) => updateHeroSlide(index, 'subtitle', e.target.value)}
+                            placeholder="支持换行，会在首页保留换行显示"
+                            className="input min-h-[72px]"
+                            rows={2}
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="label">背景图地址（可选）</label>
+                          <div className="flex gap-3 items-start">
+                            <input
+                              type="url"
+                              value={slide.background || ''}
+                              onChange={(e) => updateHeroSlide(index, 'background', e.target.value)}
+                              placeholder="https://example.com/hero.jpg 或 /uploads/hero.jpg"
+                              className="input flex-1"
+                            />
+                            {slide.background && (
+                              <img
+                                src={slide.background}
+                                alt={`第 ${index + 1} 张轮播背景预览`}
+                                className="w-20 h-12 object-cover rounded border border-[var(--color-border)]"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             {/* 预览 */}
             <div className="p-4 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
@@ -611,7 +935,7 @@ export default function SettingsPage() {
                   {settings.hero_tagline || '图片 API 服务平台'}
                 </p>
                 <p className="text-xl font-bold text-[var(--color-text)] mb-1">
-                  {settings.hero_title || '樱道 API'}
+                  {settings.hero_title || settings.site_name || '网站名称'}
                 </p>
                 <p className="text-sm text-[var(--color-text-secondary)] whitespace-pre-line">
                   {settings.hero_subtitle || '稳定、高效的图片接口服务，为你的项目提供丰富的视觉内容。\n支持多种分类，一键接入，即刻使用。'}
@@ -621,72 +945,172 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* ===== 存储设置 ===== */}
+        <div className="card mb-6">
+          <h3 className="text-base font-semibold text-[var(--color-text)] mb-2">存储设置</h3>
+          <p className="text-sm text-[var(--color-text-tertiary)] mb-4">设置默认图片存储位置；分类管理中可为每个分类单独覆盖</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-4xl">
+            {[
+              { id: 'cos', name: '腾讯云 COS', desc: storageInfo?.cos?.configured ? `${storageInfo.cos.bucket} / ${storageInfo.cos.region}` : '使用环境变量中的 COS 配置' },
+              { id: 'local', name: '本地存储', desc: storageInfo?.local?.publicPath ? `保存到 ${storageInfo.local.publicPath}` : '保存到 public/uploads' },
+              { id: 'other', name: '其他存储', desc: '预留扩展，当前不建议用于上传' },
+            ].map((provider) => {
+              const active = settings.storage_provider === provider.id;
+              return (
+                <button
+                  key={provider.id}
+                  type="button"
+                  onClick={() => handleChange('storage_provider', provider.id)}
+                  className={`text-left p-4 rounded-lg border transition-colors ${
+                    active
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary-subtle)]'
+                      : 'border-[var(--color-border)] bg-[var(--color-bg-subtle)] hover:border-[var(--color-primary)]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-[var(--color-text)]">{provider.name}</span>
+                    {active && (
+                      <span className="text-xs text-[var(--color-primary)]">当前默认</span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-xs text-[var(--color-text-tertiary)] leading-relaxed">{provider.desc}</p>
+                </button>
+              );
+            })}
+          </div>
+
+          {storageInfo && (
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl">
+              <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+                <p className="text-xs font-medium text-[var(--color-text)] mb-2">腾讯云 COS 当前配置</p>
+                <div className="space-y-1 text-xs text-[var(--color-text-secondary)]">
+                  <p>Bucket：{storageInfo.cos?.bucket || '未配置'}</p>
+                  <p>Region：{storageInfo.cos?.region || '未配置'}</p>
+                  <p>SecretId：{storageInfo.cos?.secretIdMasked || '未配置'}</p>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+                <p className="text-xs font-medium text-[var(--color-text)] mb-2">本地存储当前配置</p>
+                <div className="space-y-1 text-xs text-[var(--color-text-secondary)]">
+                  <p>访问路径：{storageInfo.local?.publicPath || '/uploads'}</p>
+                  <p className="break-all">磁盘目录：{storageInfo.local?.path || 'public/uploads'}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* ===== 菜单设置 ===== */}
         <div className="card mb-6">
           <h3 className="text-base font-semibold text-[var(--color-text)] mb-4">菜单设置</h3>
-          <p className="text-sm text-[var(--color-text-tertiary)] mb-4">自定义页尾和顶部导航菜单，使用 JSON 格式编辑链接列表</p>
+          <p className="text-sm text-[var(--color-text-tertiary)] mb-4">自定义页尾和顶部导航菜单。填写“显示文字”和“链接地址”即可，链接地址可以是站内路径，也可以是完整网址。</p>
           
-          <div className="space-y-6 max-w-lg">
+          <div className="space-y-6 max-w-4xl">
             {/* 页尾链接 */}
             <div>
-              <label className="label">页尾链接（JSON 数组）</label>
-              <textarea
-                value={settings.footer_links || ''}
-                onChange={(e) => handleChange('footer_links', e.target.value)}
-                placeholder='[{"label":"API文档","href":"/docs"},{"label":"使用示例","href":"/example"}]'
-                className="input font-mono text-xs min-h-[80px]"
-                rows={3}
-              />
-              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">格式：[ {"{"}"label":"显示文字", "href":"/链接路径" {"}"}]</p>
-              {/* 预览 */}
-              {settings.footer_links && (
-                <div className="mt-2 p-3 bg-[var(--color-bg-subtle)] rounded-md">
-                  <p className="text-xs text-[var(--color-text-tertiary)] mb-2">预览：</p>
-                  <div className="flex flex-wrap gap-4">
-                    {(() => {
-                      try {
-                        const links = JSON.parse(settings.footer_links);
-                        return links.map((link: any, i: number) => (
-                          <span key={i} className="text-xs text-[var(--color-text-secondary)]">{link.label} → {link.href}</span>
-                        ));
-                      } catch {
-                        return <span className="text-xs text-error-DEFAULT">JSON 格式错误</span>;
-                      }
-                    })()}
-                  </div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <div>
+                  <label className="label mb-0">页尾链接</label>
+                  <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">显示在网站底部。示例：显示文字“API文档”，链接地址“/docs”。</p>
                 </div>
-              )}
+                <button type="button" onClick={() => addLinkItem('footer_links')} className="btn-primary text-xs px-3 py-1.5">
+                  新增页尾链接
+                </button>
+              </div>
+              <div className="space-y-2">
+                {footerLinks.map((link, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr_auto] gap-2 p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+                    <div>
+                      <label className="label">显示文字</label>
+                      <input
+                        type="text"
+                        value={link.label || ''}
+                        onChange={(e) => updateLinkItem('footer_links', index, 'label', e.target.value)}
+                        placeholder="例如：API文档"
+                        className="input"
+                      />
+                    </div>
+                    <div>
+                      <label className="label">链接地址</label>
+                      <input
+                        type="text"
+                        value={link.href || ''}
+                        onChange={(e) => updateLinkItem('footer_links', index, 'href', e.target.value)}
+                        placeholder="例如：/docs 或 https://example.com"
+                        className="input"
+                      />
+                    </div>
+                    <div className="flex md:items-end">
+                      <button
+                        type="button"
+                        onClick={() => removeLinkItem('footer_links', index)}
+                        className="w-full md:w-auto px-3 py-2 text-sm text-error-DEFAULT hover:underline"
+                      >
+                        删除
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {footerLinks.length === 0 && (
+                  <div className="p-4 rounded-lg bg-[var(--color-bg-subtle)] text-sm text-[var(--color-text-tertiary)] border border-dashed border-[var(--color-border)]">
+                    暂无页尾链接，点击“新增页尾链接”添加。
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* 顶部导航链接 */}
             <div>
-              <label className="label">顶部导航链接（JSON 数组）</label>
-              <textarea
-                value={settings.header_links || ''}
-                onChange={(e) => handleChange('header_links', e.target.value)}
-                placeholder='[{"label":"首页","href":"/"},{"label":"图库","href":"/gallery"}]'
-                className="input font-mono text-xs min-h-[80px]"
-                rows={3}
-              />
-              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">格式：[ {"{"}"label":"显示文字", "href":"/链接路径" {"}"}]</p>
-              {/* 预览 */}
-              {settings.header_links && (
-                <div className="mt-2 p-3 bg-[var(--color-bg-subtle)] rounded-md">
-                  <p className="text-xs text-[var(--color-text-tertiary)] mb-2">预览：</p>
-                  <div className="flex flex-wrap gap-4">
-                    {(() => {
-                      try {
-                        const links = JSON.parse(settings.header_links);
-                        return links.map((link: any, i: number) => (
-                          <span key={i} className="text-xs text-[var(--color-text-secondary)]">{link.label} → {link.href}</span>
-                        ));
-                      } catch {
-                        return <span className="text-xs text-error-DEFAULT">JSON 格式错误</span>;
-                      }
-                    })()}
-                  </div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <div>
+                  <label className="label mb-0">顶部导航链接</label>
+                  <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">显示在首页顶部导航栏。建议保留“首页 / 图库 / 文档 / 示例”等常用入口。</p>
                 </div>
-              )}
+                <button type="button" onClick={() => addLinkItem('header_links')} className="btn-primary text-xs px-3 py-1.5">
+                  新增顶部链接
+                </button>
+              </div>
+              <div className="space-y-2">
+                {headerLinks.map((link, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr_auto] gap-2 p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+                    <div>
+                      <label className="label">显示文字</label>
+                      <input
+                        type="text"
+                        value={link.label || ''}
+                        onChange={(e) => updateLinkItem('header_links', index, 'label', e.target.value)}
+                        placeholder="例如：首页"
+                        className="input"
+                      />
+                    </div>
+                    <div>
+                      <label className="label">链接地址</label>
+                      <input
+                        type="text"
+                        value={link.href || ''}
+                        onChange={(e) => updateLinkItem('header_links', index, 'href', e.target.value)}
+                        placeholder="例如：/ 或 /gallery"
+                        className="input"
+                      />
+                    </div>
+                    <div className="flex md:items-end">
+                      <button
+                        type="button"
+                        onClick={() => removeLinkItem('header_links', index)}
+                        className="w-full md:w-auto px-3 py-2 text-sm text-error-DEFAULT hover:underline"
+                      >
+                        删除
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {headerLinks.length === 0 && (
+                  <div className="p-4 rounded-lg bg-[var(--color-bg-subtle)] text-sm text-[var(--color-text-tertiary)] border border-dashed border-[var(--color-border)]">
+                    暂无顶部导航链接，点击“新增顶部链接”添加。
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
