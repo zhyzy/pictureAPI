@@ -93,6 +93,12 @@ export default function LoginPage() {
         </button>
       </form>
 
+      <div className="mt-5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-3 text-xs text-[var(--color-text-secondary)]">
+        <p className="font-medium text-[var(--color-text)] mb-1">首次部署默认管理员</p>
+        <p>用户名：admin</p>
+        <p>密码：未设置 ADMIN_PASSWORD 时为 zl939921104；如果 .env.local 设置了 ADMIN_PASSWORD，请使用你设置的密码。</p>
+      </div>
+
       <div className="mt-6 text-center">
         <p className="text-sm text-[var(--color-text-tertiary)]">
           还没有账号？{' '}

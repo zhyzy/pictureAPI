@@ -4,13 +4,15 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
+    const normalizeTheme = (theme?: string | null) => theme && theme !== 'default' ? theme : 'nature';
+
     // 从服务器端获取主题设置（确保全站一致）
     const applyThemeFromServer = async () => {
       try {
         const res = await fetch('/api/settings/public');
         if (res.ok) {
           const data = await res.json();
-          const serverTheme = data.settings?.site_theme;
+          const serverTheme = normalizeTheme(data.settings?.site_theme);
           if (serverTheme) {
             document.documentElement.setAttribute('data-theme', serverTheme);
             localStorage.setItem('site_theme', serverTheme);
@@ -24,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
 
     // 先用 localStorage 快速应用（避免主题闪烁）
-    const savedTheme = localStorage.getItem('site_theme') || 'default';
+    const savedTheme = normalizeTheme(localStorage.getItem('site_theme'));
     document.documentElement.setAttribute('data-theme', savedTheme);
     
     // 应用主题特效
@@ -68,8 +70,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     // 监听主题变化
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'site_theme' && e.newValue) {
-        document.documentElement.setAttribute('data-theme', e.newValue);
-        initThemeEffectsClient(e.newValue);
+        const nextTheme = normalizeTheme(e.newValue);
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        initThemeEffectsClient(nextTheme);
       }
     };
     window.addEventListener('storage', handleStorageChange);

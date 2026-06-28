@@ -12,7 +12,7 @@ interface UpdateStatus {
   updateEnabled: boolean;
   restartConfigured: boolean;
   isGitCheckout: boolean;
-  updateSource: 'release' | 'branch';
+  updateSource: 'release' | 'tag' | 'branch';
   hasUpdate: boolean;
   isLatest: boolean;
   releaseError?: string;
@@ -102,7 +102,7 @@ export default function AdminUpdatePage() {
             <div>
               <h2 className="text-lg font-semibold text-[var(--color-text)]">版本检测</h2>
               <p className="text-sm text-[var(--color-text-tertiary)] mt-1">
-                从 GitHub Release 或指定分支读取最新版本，并与当前 package.json 版本对比。
+                优先读取 GitHub Release，其次读取版本标签，最后回退到指定分支 package.json。
               </p>
             </div>
             <button onClick={fetchStatus} disabled={loading || updating} className="btn-secondary">
@@ -130,7 +130,7 @@ export default function AdminUpdatePage() {
                 <p className="text-xs text-[var(--color-text-tertiary)] mb-1">更新源</p>
                 <p className="text-sm text-[var(--color-text)]">{status.repo} / {status.branch}</p>
                 <p className="text-xs text-[var(--color-text-tertiary)] mt-1">
-                  {status.updateSource === 'release' ? 'GitHub Release' : '分支 package.json'}
+                  {status.updateSource === 'release' ? 'GitHub Release' : status.updateSource === 'tag' ? 'GitHub Tag' : '分支 package.json'}
                 </p>
               </div>
               <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4">

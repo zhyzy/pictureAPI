@@ -49,18 +49,6 @@ interface LinkConfig {
 // 主题列表定义
 const THEMES = [
   {
-    id: 'default',
-    name: '日式极简',
-    desc: '暖赭红 · 和风书卷',
-    bg: '#faf9f7',
-    primary: '#c75b39',
-    text: '#262421',
-    border: '#e8e4dd',
-    accent: '#f9e8e0',
-    dark: false,
-    tags: ['浅色', '经典'],
-  },
-  {
     id: 'minimal',
     name: '纯粹极简',
     desc: '纯黑白 · 留白美学',
@@ -218,7 +206,7 @@ const defaultSettings: Settings = {
   cta_title: '',
   cta_background_image: '',
   watermark_enabled: 'false',
-  site_theme: 'default',
+  site_theme: 'nature',
   storage_provider: 'cos',
 };
 
@@ -290,7 +278,11 @@ export default function SettingsPage() {
 
       if (res.ok) {
         const data = await res.json();
-        setSettings({ ...defaultSettings, ...data.settings });
+        const nextSettings = { ...defaultSettings, ...data.settings };
+        if (nextSettings.site_theme === 'default') {
+          nextSettings.site_theme = 'nature';
+        }
+        setSettings(nextSettings);
         setStorageInfo(data.storage || null);
       }
     } catch (error) {
@@ -463,17 +455,17 @@ export default function SettingsPage() {
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
               <span
                 className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: THEMES.find(t => t.id === (settings.site_theme || 'default'))?.primary || '#c75b39' }}
+                style={{ backgroundColor: THEMES.find(t => t.id === (settings.site_theme || 'nature'))?.primary || '#16a34a' }}
               />
               <span className="text-xs font-medium text-[var(--color-text-secondary)]">
-                {THEMES.find(t => t.id === (settings.site_theme || 'default'))?.name || '日式极简'}
+                {THEMES.find(t => t.id === (settings.site_theme || 'nature'))?.name || '自然绿'}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {THEMES.map((theme) => {
-              const isActive = (settings.site_theme || 'default') === theme.id;
+              const isActive = (settings.site_theme || 'nature') === theme.id;
               return (
                 <button
                   key={theme.id}
