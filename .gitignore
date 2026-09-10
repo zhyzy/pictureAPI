@@ -27,6 +27,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 
 # vercel
 .vercel
@@ -36,9 +37,15 @@ yarn-error.log*
 
 # 数据库
 /data/*.db
+/data/*.db-shm
+/data/*.db-wal
 /data/*.db-journal
+/data/backups/
 /backups/
 /public/uploads/
+
+# 部署包
+/*.zip
 
 # 工作内存
 /.workbuddy 
