@@ -1,15 +1,15 @@
-导入 React 来自 'react';
-导入 { motion } 来自 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { ApiInterface } from '@/data/apiData';
 import CopyApiButton from '@/components/ui/CopyApiButton';
 
-接口 ApiCardProps {
+interface ApiCardProps {
   api: ApiInterface;
   index: number;
 }
 
 const ApiCard: React.FC<ApiCardProps> = ({ api, index }) => {
-  返回 (
+  return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ const ApiCard: React.FC<ApiCardProps> = ({ api, index }) => {
         />
 
         <div className="text-xs text-[var(--color-text-tertiary)]">
- 调用 {(api.usageCount || 0).toLocaleString()} 次
+          调用 {(api.usageCount || 0).toLocaleString()} 次
         </div>
       </div>
     </motion.div>
