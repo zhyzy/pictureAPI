@@ -1,90 +1,107 @@
-# ZL-综合API
+<div align="center">
 
-一个基于 Next.js 14 的图片接口服务平台，适合快速搭建自己的随机图片 API、图库站、内容素材接口和机器人图片接口。
+# 🖼️ ZL-综合API
 
-## 你能用它做什么
+**一站式随机图片 / 视频 API 服务平台**
 
-- 搭建公开图片 API：`/api/v1/random/:category`
-- 管理图片分类、图片资源、API 接口和用户
-- 给每个用户生成 API Key，并统计调用次数
-- 上传图片到腾讯云 COS 或本地存储
-- 在后台设置网站名称、Logo、菜单、首页轮播、主题、底部号召区
-- 后台检测 GitHub 新版本，并在 Git 部署环境中执行一键更新
+基于 Next.js 14 构建的高性能图床与内容接口平台——开箱即用的图库站、随机素材接口、机器人图片源，一个项目全部搞定。
 
-## 功能概览
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-better--sqlite3-003B57?logo=sqlite&logoColor=white)](https://github.com/WiseLibs/better-sqlite3)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-| 模块 | 功能 |
+**[快速开始](#-快速开始) · [API 使用](#-api-使用) · [部署指南](#-生产部署) · [常见问题](#-常见问题)**
+
+</div>
+
+---
+
+## ✨ 特性亮点
+
+- 🎯 **双媒体接口** —— 随机图片 `/api/v1/random/:category`、随机视频 `/api/v1/video/:category`，支持 JSON 返回与 302 直链跳转两种模式
+- 🔑 **多用户 API Key 体系** —— 每个用户独立 Key，调用次数自动统计，管理后台一目了然
+- ☁️ **三种存储后端** —— 七牛云 Kodo、腾讯云 COS、本地磁盘，可按分类灵活切换；媒体统一走同源代理，避免跨域加载失败
+- 🎨 **10 套主题 + 深色模式** —— 自然绿、赛博朋克、海洋、复古、杂志……一键切换全站配色
+- 🛠 **可视化后台** —— 分类、媒体、API、用户、系统设置、水印、轮播图、菜单全部面板化操作
+- 🖋 **图片水印引擎** —— 文字水印支持九宫格位置、字号/透明度/颜色自定义，Canvas 实时预览
+- 📈 **调用统计** —— 分类热度、接口调用量、用户用量自动聚合，首页接口按热度排序
+- 📧 **邮箱注册** —— 内置 SMTP 验证邮件，连接池 + 自动重试，不怕邮件服务商限流
+- 🔄 **后台一键更新** —— 自动检测 GitHub 新版本，备份数据后拉取、构建、重启一条龙
+- ⚡ **零配置数据库** —— better-sqlite3 + WAL 模式，首次启动自动建库，无需安装任何数据库服务
+
+## 🧭 页面一览
+
+| 模块 | 说明 |
 | --- | --- |
-| 首页 | 主题背景、轮播图、轮播文字、统计数据、接口搜索 |
-| 文档 | 自动同步后台新增分类和接口 |
-| 图库 | 按分类浏览图片 |
-| 用户中心 | API Key、调用统计、资料编辑、默认随机头像 |
-| 管理后台 | 仪表盘、分类、图片、API、用户、系统设置、系统更新 |
-| 存储 | 腾讯云 COS、本地存储、按分类设置存储位置 |
-| 主题 | 默认自然绿，支持多套主题和深色模式 |
+| 🏠 首页 | 主题背景、轮播图、统计数据、接口搜索（按热度排序） |
+| 📖 文档页 | 自动同步后台新增的分类和接口，无需手写文档 |
+| 🌊 图库 | 图片 / 视频双 Tab，瀑布流按原始比例展示 |
+| 👤 用户中心 | API Key 管理、调用统计、资料编辑 |
+| 🧑‍💼 管理后台 | 仪表盘、分类、图片、视频、API、用户、系统设置、系统更新 |
 
-## 环境要求
+## 🚀 快速开始
 
-- Node.js 20 LTS 或更高
-- npm 10 或更高
-- Git
-- 生产环境推荐 PM2、1Panel、宝塔或其他进程守护工具
+### 环境要求
 
-## 第一步：获取项目
+| 依赖 | 版本 |
+| --- | --- |
+| Node.js | 20 LTS 或更高 |
+| npm | 10 或更高 |
+| Git | 仅后台一键更新必需 |
 
-推荐使用 Git 克隆。只有 Git 部署方式才能使用后台一键更新。
+### 1️⃣ 克隆项目
+
+> 💡 推荐使用 Git 克隆。压缩包方式没有 `.git` 信息，后台无法自动拉取更新。
 
 ```bash
 git clone https://github.com/zhyzy/pictureAPI.git
 cd pictureAPI
 ```
 
-不推荐用 GitHub 下载压缩包部署，因为压缩包没有 `.git` 信息，后台无法自动拉取更新。
-
-## 第二步：安装依赖
+### 2️⃣ 安装依赖
 
 ```bash
 npm install
 ```
 
-如果 npm 提示依赖审计风险，先不要直接 `npm audit fix --force`，它可能升级大版本并破坏项目。确认项目能跑起来后，再按需处理依赖安全升级。
+> ⚠️ 如果 npm 提示依赖审计风险，先不要直接 `npm audit fix --force`，它可能升级大版本破坏项目。确认能跑起来后再按需处理。
 
-## 第三步：创建环境变量
+### 3️⃣ 配置环境变量
 
-在项目根目录创建 `.env.local` 文件。
-
-最小可用配置：
+在项目根目录创建 `.env.local`，最小可用配置只需两行：
 
 ```env
 JWT_SECRET=请改成一段足够长的随机字符串
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-完整示例：
+<details>
+<summary><b>完整配置示例（点击展开）</b></summary>
 
 ```env
-# 必填：JWT 登录密钥，生产环境必须改
+# 必填：JWT 登录密钥，生产环境必须修改
 JWT_SECRET=请改成一段足够长的随机字符串
 
 # 网站地址
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# 可选：首次初始化管理员密码
-# 不填写时默认管理员密码是 zl939921104
-# 填写后会覆盖默认密码，例如 ADMIN_PASSWORD=admin123
+# 可选：首次初始化管理员密码（不填默认为 zl939921104）
 ADMIN_PASSWORD=
-
-# 可选：腾讯云 COS
-COS_SECRET_ID=
-COS_SECRET_KEY=
-COS_BUCKET=
-COS_REGION=
 
 # 可选：七牛云 Kodo（外链域名不带末尾斜杠，需绑定到 Bucket）
 QINIU_ACCESS_KEY=
 QINIU_SECRET_KEY=
 QINIU_BUCKET=
 QINIU_DOMAIN=
+
+# 可选：腾讯云 COS
+COS_SECRET_ID=
+COS_SECRET_KEY=
+COS_BUCKET=
+COS_REGION=
 
 # 可选：后台一键更新
 PICTURE_API_UPDATE_REPO=zhyzy/pictureAPI
@@ -93,81 +110,104 @@ PICTURE_API_UPDATE_ENABLED=false
 PICTURE_API_UPDATE_RESTART_COMMAND=
 ```
 
-## 第四步：启动开发环境
+</details>
+
+### 4️⃣ 启动
 
 ```bash
 npm run dev
 ```
 
-打开：
+打开 `http://localhost:3000`，后台入口在 `http://localhost:3000/auth/login`。
 
-```text
-http://localhost:3000
-```
+### 5️⃣ 登录管理员
 
-后台入口：
-
-```text
-http://localhost:3000/auth/login
-```
-
-## 第五步：登录默认管理员
-
-首次启动时，系统会自动创建数据库和默认管理员。
+首次启动自动创建数据库和默认管理员：
 
 | 项目 | 值 |
 | --- | --- |
 | 用户名 | `admin` |
-| 默认密码 | `zl939921104` |
+| 默认密码 | `zl939921104`（可通过 `ADMIN_PASSWORD` 覆盖，仅首次建库时生效） |
 
-非常重要：
+> 🔒 首次登录后请立刻修改管理员密码，并把 `JWT_SECRET` 换成强随机字符串。本地想重新初始化：停服后删除 `data/pictureapi.db` 再启动（生产环境切勿删库）。
 
-- 如果 `.env.local` 没有写 `ADMIN_PASSWORD`，默认密码就是 `zl939921104`。
-- 如果 `.env.local` 写了 `ADMIN_PASSWORD=admin123`，那首次初始化的管理员密码就是 `admin123`。
-- 管理员只在数据库第一次创建时初始化一次。
-- 数据库已经生成后，再修改 `ADMIN_PASSWORD` 不会自动修改已有管理员密码。
-- 如果你只是本地测试，想重新初始化管理员，可以停止项目后删除 `data/pictureapi.db`，再重新 `npm run dev`。
-- 生产环境不要随便删除数据库，里面有用户、图片、设置和调用数据。
+### 6️⃣ 后台推荐设置顺序
 
-首次登录后请立刻修改管理员密码，并把 `JWT_SECRET` 改成强随机字符串。
+1. 系统设置：网站名称、Logo、Favicon、备案号
+2. 主题设置：默认自然绿，可随时切换
+3. 存储设置：七牛云 / 腾讯云 COS / 本地存储
+4. 分类管理 → 图片 / 视频管理 → API 管理
+5. 首页展示、菜单、水印、邮件（按需）
 
-## 第六步：后台基础设置
+## 📡 API 使用
 
-登录后台后，建议按顺序设置：
+### 随机图片
 
-1. 系统设置：网站名称、Logo、Favicon、备案号。
-2. 主题设置：默认已经是自然绿，可以按需要切换。
-3. 存储设置：选择腾讯云 COS 或本地存储。
-4. 分类管理：新增图片分类，设置 slug。
-5. 图片管理：上传图片并归类。
-6. API 管理：确认接口是否启用。
-7. 首页展示设置：设置轮播内容、背景图、高度和透明度。
-8. 菜单设置：设置顶部导航和底部链接。
-9. 邮件设置：需要邮箱验证时再配置 SMTP。
+```http
+GET /api/v1/random/:category?key=YOUR_API_KEY
+```
 
-## 生产部署
+### 随机视频
 
-> **重要：只能单实例部署。** 项目使用 sql.js（内存数据库），数据全量保存在每个进程内存中并整文件写盘。
-> 如果以多实例运行（PM2 cluster 模式 `-i max`、Docker 多副本、多台机器共享一块盘），各进程会互相覆盖
-> `data/pictureapi.db`，导致数据丢失和错乱。PM2 必须使用默认的 fork 模式（不加 `-i` 参数）。
+```http
+GET /api/v1/video/:category?key=YOUR_API_KEY
+```
 
-### 方式一：普通 Node 部署
+### 参数说明
+
+| 参数 | 可选值 | 说明 |
+| --- | --- | --- |
+| `key` | 用户 API Key | 必填，用于鉴权和调用统计 |
+| `type` | `json`（默认）/ `img` / `image` / `redirect` | `img` 等返回 302 跳转到媒体本身，可直接放进 `<img src>` 当随机图床用 |
+
+### 调用示例
+
+```bash
+# JSON 模式
+curl "https://your-domain.com/api/v1/random/anime?key=YOUR_API_KEY"
+```
+
+```json
+{
+  "url": "https://example.com/image.jpg",
+  "id": 1,
+  "category": "anime",
+  "category_name": "动漫"
+}
+```
+
+```html
+<!-- 直链模式：每次刷新随机一张 -->
+<img src="https://your-domain.com/api/v1/random/anime?key=YOUR_API_KEY&type=img" />
+```
+
+## ☁️ 存储方案
+
+后台系统设置中可切换存储后端，**不同分类可使用不同存储**：
+
+| 后端 | 适用场景 |
+| --- | --- |
+| 七牛云 Kodo | 生产环境推荐，CDN 加速，媒体走同源代理加载 |
+| 腾讯云 COS | 生产环境、大文件和公网访问 |
+| 本地存储 | 小型站点、快速体验，文件保存到 `public/uploads` |
+
+> 💡 前端展示统一走 `/api/media/*` 同源代理转发（支持视频 Range 拖动 + 强缓存），可有效规避对象存储域名跨域加载失败的问题。
+
+## 📦 生产部署
+
+> ⚠️ **建议单实例部署。** 数据库为 SQLite 单文件设计，多实例（多机/多副本）会导致数据分叉；使用本地上传时媒体文件也无法跨实例共享。PM2 请使用默认 fork 模式（不加 `-i` 参数）。如需多实例，请使用对象存储并自行评估数据库共享方案。
+
+### 方式一：Node 直接部署
 
 ```bash
 git clone https://github.com/zhyzy/pictureAPI.git
 cd pictureAPI
 npm install
 npm run build
-npm start
+npm start        # 默认端口 3008，可在 package.json 中调整
 ```
 
-`npm start` 默认端口是 `3008`。可以在 `package.json` 里调整：
-
-```json
-"start": "next start -p 3008"
-```
-
-### 方式二：PM2 部署
+### 方式二：PM2 守护部署
 
 ```bash
 npm install -g pm2
@@ -179,35 +219,33 @@ pm2 start npm --name pictureapi -- start
 pm2 save
 ```
 
-注意：不要使用 `pm2 -i <n>`（cluster 模式），多进程会互相覆盖数据库文件（见上方单实例约束）。
-
-常用命令：
-
 ```bash
-pm2 status
-pm2 logs pictureapi
+pm2 status          # 查看状态
+pm2 logs pictureapi # 查看日志
 pm2 restart pictureapi
-pm2 stop pictureapi
 ```
 
-### 方式三：1Panel / 宝塔部署
+### 方式三：1Panel / 宝塔
 
-1. 在服务器安装 Node.js 20 LTS。
-2. 用 Git 克隆项目到网站目录。
-3. 在项目根目录创建 `.env.local`。
-4. 执行 `npm install`。
-5. 执行 `npm run build`。
-6. 启动命令填写 `npm start`。
-7. 面板反向代理到项目端口 `3008`。
+1. 服务器安装 Node.js 20 LTS
+2. Git 克隆项目到网站目录，创建 `.env.local`
+3. 执行 `npm install` → `npm run build`
+4. 启动命令 `npm start`，面板反向代理到 `3008` 端口
 
-## Nginx 反向代理示例
+### 方式四：Docker
+
+```bash
+docker compose up -d
+```
+
+### Nginx 参考配置
 
 ```nginx
 server {
     listen 80;
     server_name your-domain.com;
 
-    client_max_body_size 50M;
+    client_max_body_size 200m;   # 视频上传必需
 
     location / {
         proxy_pass http://127.0.0.1:3008;
@@ -222,131 +260,81 @@ server {
 }
 ```
 
-## 后台一键更新
+## 🔄 后台一键更新
 
-后台路径：
+后台路径：`/admin/update`
 
-```text
-/admin/update
-```
+**检测逻辑**：优先读取 GitHub Release → 其次 Git tag（如 `v0.2.0`）→ 最后回退到 `master` 分支的 `package.json`。
 
-检测逻辑：
+**前提条件**：
 
-1. 优先读取 GitHub Release 最新版本。
-2. 如果没有 Release，读取 GitHub tag，例如 `v0.2.0`。
-3. 如果 tag 也没有，再读取 `master` 分支的 `package.json`。
+- 项目必须是 `git clone` 部署
+- `.env.local` 设置 `PICTURE_API_UPDATE_ENABLED=true`
+- 运行用户有项目目录写权限，且服务器能访问 GitHub
 
-执行更新前提：
+**更新流程**：备份 `.env.local`、数据库、`public/uploads` → `git pull --ff-only` → `npm install` → 重新构建 → 执行重启命令。
 
-- 项目必须是 `git clone` 部署。
-- `.env.local` 必须设置 `PICTURE_API_UPDATE_ENABLED=true`。
-- 服务器运行用户必须有项目目录写权限。
-- 服务器必须能访问 GitHub。
-
-更新过程：
-
-1. 备份 `.env.local`、`data/pictureapi.db`、`public/uploads` 到 `backups/update-*`。
-2. 执行 `git fetch` 和 `git pull --ff-only`。
-3. 执行 `npm install`。
-4. 删除 `.next` 并重新 `npm run build`。
-5. 如果配置了 `PICTURE_API_UPDATE_RESTART_COMMAND`，会执行该命令；否则需要你在面板或 PM2 里手动重启。
-
-PM2 重启脚本示例：
-
-```bash
-pm2 restart pictureapi
-```
-
-可以把它写进服务器脚本，再把脚本路径配置到：
+重启命令可配置：
 
 ```env
 PICTURE_API_UPDATE_RESTART_COMMAND=/path/to/restart-pictureapi.sh
 ```
 
-## 本地存储和腾讯云 COS
+## ❓ 常见问题
 
-后台系统设置里可以选择：
+<details>
+<summary><b>默认密码登录不了？</b></summary>
 
-- 腾讯云 COS：适合生产环境、大文件和公网访问。
-- 本地存储：图片会保存到 `public/uploads`。
+先看 `.env.local` 有没有 `ADMIN_PASSWORD`：没有则是 `zl939921104`，有则以配置为准。数据库初始化后再改该变量不影响已有密码。本地测试可删 `data/pictureapi.db` 重新初始化；生产环境请在后台用户管理中重置。
+</details>
 
-注意：
+<details>
+<summary><b>为什么后台提示不能一键更新？</b></summary>
 
-- `public/uploads` 是运行时数据，不会提交到 GitHub。
-- 使用一键更新前会自动备份 `public/uploads`。
-- 分类可以单独设置存储位置，不同分类可使用不同存储。
+常见原因：非 Git 克隆部署、未设置 `PICTURE_API_UPDATE_ENABLED=true`、运行用户无写权限、服务器无法访问 GitHub。
+</details>
 
-## API 调用示例
+<details>
+<summary><b>本地上传的图片，更新后会丢吗？</b></summary>
 
-```http
-GET /api/v1/random/:category
-```
+不会。`public/uploads` 不参与版本控制，一键更新前会自动备份。生产环境仍建议定期做服务器级备份。
+</details>
 
-示例：
+<details>
+<summary><b>检测更新时没有 GitHub Release 怎么办？</b></summary>
 
-```bash
-curl "https://your-domain.com/api/v1/random/anime?key=YOUR_API_KEY"
-```
+系统会自动回退到 Git tag，再回退到分支 `package.json`。推荐发布时创建 tag 和 Release，更新日志展示更完整。
+</details>
 
-响应：
-
-```json
-{
-  "url": "https://example.com/image.jpg",
-  "id": 1,
-  "category": "anime",
-  "category_name": "动漫"
-}
-```
-
-## 常见问题
-
-### 1. README 写的默认密码登录不了？
-
-先看 `.env.local` 里有没有 `ADMIN_PASSWORD`。
-
-- 没有：密码是 `zl939921104`。
-- 有：密码是你自己设置的 `ADMIN_PASSWORD`。
-
-如果数据库已经初始化过，再改 `ADMIN_PASSWORD` 不会修改已有密码。本地测试可以删除 `data/pictureapi.db` 后重新启动；生产环境请在后台用户管理或数据库里重置。
-
-### 2. 检测更新时没有 GitHub Release 怎么办？
-
-没关系。系统会自动回退到 Git tag，再回退到分支 `package.json`。推荐每次发布时创建 tag 和 Release，这样更新日志展示更完整。
-
-### 3. 为什么后台提示不能一键更新？
-
-常见原因：
-
-- 项目不是 Git 克隆部署。
-- 没有设置 `PICTURE_API_UPDATE_ENABLED=true`。
-- 当前运行用户没有写权限。
-- 服务器无法访问 GitHub。
-
-### 4. 图片上传到本地后，更新会不会丢？
-
-不会直接提交到 GitHub。执行一键更新前会备份 `public/uploads`。生产环境仍建议定期做服务器级备份。
-
-### 5. 默认主题是什么？
-
-新部署默认使用“自然绿”。旧的红色默认主题不再作为后台可选主题显示。
-
-## 目录说明
+## 🗂 目录结构
 
 ```text
 components/          公共组件
 hooks/               前端 Hooks
-lib/                 数据库、认证、邮件、存储、更新逻辑
+lib/                 数据库、认证、邮件、存储、水印、更新逻辑
 pages/               页面和 API 路由
 pages/admin/         管理后台页面
+pages/api/v1/        对外媒体接口（random / video）
 pages/api/admin/     管理后台 API
+styles/themes/       多套站点主题
 public/avatars/      默认头像
-public/uploads/      本地上传图片，运行时生成
-styles/              全局样式和主题
-data/                运行时数据库，首次启动生成
-backups/             一键更新备份，运行时生成
+public/uploads/      本地上传媒体（运行时生成，不入库）
+data/                SQLite 数据库（首次启动自动创建）
+backups/             一键更新备份（运行时生成）
 ```
 
-## License
+## 🤝 贡献
 
-MIT
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 License
+
+本项目基于 [MIT License](LICENSE) 开源。
+
+---
+
+<div align="center">
+
+**如果这个项目对你有帮助，欢迎点一个 Star ⭐**
+
+</div>
