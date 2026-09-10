@@ -1,0 +1,315 @@
+/* === 二次元风 - 萌系粉色 === */
+:root[data-theme="anime"] {
+  --color-bg: #fff5f7;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #ffe4ec;
+  --color-text: #4a4a4a;
+  --color-text-secondary: #7a7a7a;
+  --color-text-tertiary: #a0a0a0;
+  --color-border: #ffd1dc;
+  --color-border-subtle: #ffe4ec;
+  
+  /* 主色 - 樱花粉 */
+  --color-primary: #ff6b9d;
+  --color-primary-hover: #ff8fab;
+  --color-primary-subtle: #ffe4ec;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 2px 8px rgba(255, 107, 157, 0.1);
+  --shadow-soft: 0 4px 16px rgba(255, 107, 157, 0.15);
+  --shadow-medium: 0 8px 32px rgba(255, 107, 157, 0.2);
+}
+
+/* === 二次元背景 - 樱花图案 === */
+[data-theme="anime"] body {
+  background: 
+    linear-gradient(180deg, #fff5f7 0%, #ffffff 50%, #fff5f7 100%);
+  position: relative;
+}
+
+/* 樱花装饰背景 */
+[data-theme="anime"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(255, 182, 193, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 200, 200, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: anime-bg-float 10s ease-in-out infinite;
+}
+
+@keyframes anime-bg-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-10px, -10px); }
+}
+
+/* 浮动表情装饰 */
+[data-theme="anime"] body::after {
+  content: '🌸 ✿ ♡ ❀ 🌷';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  opacity: 0.03;
+  letter-spacing: 50px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  animation: emoji-rotate 20s linear infinite;
+}
+
+@keyframes emoji-rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* === 二次元卡片 === */
+[data-theme="anime"] .card {
+  border-radius: 16px;
+  border: 2px solid var(--color-border);
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片上的可爱装饰 */
+[data-theme="anime"] .card::before {
+  content: '♡';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: #ff6b9d;
+  opacity: 0.3;
+  animation: heart-beat 1.5s ease-in-out infinite;
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+[data-theme="anime"] .card:hover {
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+  border-color: #ff6b9d;
+}
+
+/* === 二次元按钮 - 萌萌风格 === */
+[data-theme="anime"] .btn-primary {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  position: relative;
+  padding-left: 35px;
+  font-weight: 600;
+}
+
+/* 按钮上的装饰 */
+[data-theme="anime"] .btn-primary::before {
+  content: '★';
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  animation: star-spin 3s linear infinite;
+}
+
+@keyframes star-spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+[data-theme="anime"] .btn-primary::after {
+  content: '〜';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  animation: tilde-float 2s ease-in-out infinite;
+}
+
+@keyframes tilde-float {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(3px); }
+}
+
+[data-theme="anime"] .btn-primary:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+/* 次要按钮 */
+[data-theme="anime"] .btn-secondary {
+  border-radius: 20px;
+  border: 2px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.8);
+  position: relative;
+  padding-left: 35px;
+}
+
+[data-theme="anime"] .btn-secondary::before {
+  content: '♡';
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ff6b9d;
+}
+
+[data-theme="anime"] .btn-secondary:hover {
+  background: #fff5f7;
+  border-color: #ff6b9d;
+  transform: translateY(-2px);
+}
+
+/* === 二次元输入框 === */
+[data-theme="anime"] .input {
+  border-radius: 12px;
+  border: 2px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.9);
+  padding-left: 35px;
+}
+
+[data-theme="anime"] .input::before {
+  content: '🔍';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+[data-theme="anime"] .input:focus {
+  border-color: #ff6b9d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2), 0 0 20px rgba(255, 107, 157, 0.1);
+  transform: translateY(-1px);
+}
+
+/* === 二次元标题 === */
+[data-theme="anime"] h1,
+[data-theme="anime"] h2,
+[data-theme="anime"] h3 {
+  color: #ff6b9d;
+}
+
+[data-theme="anime"] h1::after,
+[data-theme="anime"] h2::after {
+  content: ' ✿';
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+/* === 二次元徽章 === */
+[data-theme="anime"] .badge-primary {
+  background: linear-gradient(135deg, #ffe4ec 0%, #ffd1dc 100%);
+  color: #ff6b9d;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 157, 0.3);
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="anime"] main,
+[data-theme="anime"] .container,
+[data-theme="anime"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 二次元暗粉 === */
+:root[data-theme="anime"].dark {
+  --color-bg: #1a1215;
+  --color-bg-elevated: #251a1e;
+  --color-bg-subtle: #1f1518;
+  --color-text: #f0dce6;
+  --color-text-secondary: #c89ab0;
+  --color-text-tertiary: #9a6b80;
+  --color-border: #3d2535;
+  --color-border-subtle: #2a1a25;
+  --color-primary: #ff7aad;
+  --color-primary-hover: #ff9ec4;
+  --color-primary-subtle: #2a1520;
+}
+
+[data-theme="anime"].dark body {
+  background:
+    linear-gradient(180deg, #1a1215 0%, #251a1e 50%, #1a1215 100%);
+}
+
+[data-theme="anime"].dark body::before {
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 122, 173, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(255, 182, 193, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 150, 170, 0.04) 0%, transparent 70%);
+}
+
+[data-theme="anime"].dark body::after {
+  opacity: 0.02;
+}
+
+[data-theme="anime"].dark .card {
+  border-color: var(--color-border);
+  background: linear-gradient(135deg, #251a1e 0%, #1a1215 100%);
+}
+
+[data-theme="anime"].dark .card::before {
+  color: #ff7aad;
+  opacity: 0.2;
+}
+
+[data-theme="anime"].dark .card:hover {
+  box-shadow: 0 8px 25px rgba(255, 122, 173, 0.15);
+  border-color: #ff7aad;
+}
+
+[data-theme="anime"].dark .btn-primary {
+  background: linear-gradient(135deg, #ff7aad 0%, #ff6b9d 100%);
+  box-shadow: 0 4px 15px rgba(255, 122, 173, 0.2);
+}
+
+[data-theme="anime"].dark .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(255, 122, 173, 0.35);
+}
+
+[data-theme="anime"].dark .btn-secondary {
+  border-color: var(--color-border);
+  background: rgba(37, 26, 30, 0.6);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="anime"].dark .btn-secondary:hover {
+  background: var(--color-bg-subtle);
+  border-color: #ff7aad;
+}
+
+[data-theme="anime"].dark .input {
+  background: rgba(26, 18, 21, 0.9);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="anime"].dark h1,
+[data-theme="anime"].dark h2,
+[data-theme="anime"].dark h3 {
+  color: #ff7aad;
+}
+
+[data-theme="anime"].dark .badge-primary {
+  background: linear-gradient(135deg, #2a1520 0%, #1f1018 100%);
+  color: #ff7aad;
+  border-color: rgba(255, 122, 173, 0.25);
+}

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  imgapi:
+    build: .
+    container_name: imgAPI
+    restart: unless-stopped
+    ports:
+      - "3008:3008"
+    volumes:
+      # 持久化数据库文件（防止容器重建后数据丢失）
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      # 从 .env.local 文件加载（或在下方直接填写）
+    env_file:
+      - .env.local

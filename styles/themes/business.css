@@ -1,0 +1,263 @@
+/* === 商务风 - 专业稳重 === */
+:root[data-theme="business"] {
+  --color-bg: #f8fafc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #f1f5f9;
+  --color-text: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+  
+  /* 主色 - 商务蓝 */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-subtle: #dbeafe;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Inter", "SF Pro Display", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-soft: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+  --shadow-medium: 0 10px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.03);
+}
+
+/* === 商务背景 - 简洁线条 === */
+[data-theme="business"] body {
+  background-color: #f8fafc;
+  background-image: 
+    linear-gradient(rgba(37, 99, 235, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.02) 1px, transparent 1px);
+  background-size: 100px 100px;
+  font-family: var(--font-sans);
+  position: relative;
+}
+
+/* 专业装饰 */
+[data-theme="business"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8, #2563eb);
+  z-index: 9999;
+}
+
+/* === 商务卡片 - 简洁专业 === */
+[data-theme="business"] .card {
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* 卡片顶部装饰线 */
+[data-theme="business"] .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+[data-theme="business"] .card:hover::before {
+  transform: scaleX(1);
+}
+
+[data-theme="business"] .card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+  border-color: #2563eb;
+}
+
+/* === 商务按钮 - 专业稳重 === */
+[data-theme="business"] .btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="business"] .btn-primary::before {
+  content: '▸';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+[data-theme="business"] .btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+/* 次要按钮 */
+[data-theme="business"] .btn-secondary {
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-text);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+[data-theme="business"] .btn-secondary:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.02);
+}
+
+/* === 商务输入框 - 简洁专业 === */
+[data-theme="business"] .input {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #ffffff;
+  padding-left: 12px;
+  font-size: 0.875rem;
+}
+
+[data-theme="business"] .input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+}
+
+/* === 商务标题 === */
+[data-theme="business"] h1,
+[data-theme="business"] h2,
+[data-theme="business"] h3 {
+  color: #1e293b;
+  font-weight: 700;
+  position: relative;
+}
+
+[data-theme="business"] h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #2563eb, transparent);
+  border-radius: 3px;
+}
+
+/* === 商务徽章 === */
+[data-theme="business"] .badge {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+}
+
+[data-theme="business"] .badge-primary {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="business"] main,
+[data-theme="business"] .container,
+[data-theme="business"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 商务深蓝灰暗色 === */
+:root[data-theme="business"].dark {
+  --color-bg: #0f172a;
+  --color-bg-elevated: #1e293b;
+  --color-bg-subtle: #172033;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-tertiary: #64748b;
+  --color-border: #334155;
+  --color-border-subtle: #1e293b;
+  --color-primary: #60a5fa;
+  --color-primary-hover: #93c5fd;
+  --color-primary-subtle: #1e3a5a;
+}
+
+[data-theme="business"].dark body {
+  background-color: #0f172a;
+  background-image:
+    linear-gradient(rgba(96, 165, 250, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.02) 1px, transparent 1px);
+}
+
+[data-theme="business"].dark body::before {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6, #60a5fa);
+}
+
+[data-theme="business"].dark .card {
+  border-color: var(--color-border);
+  background: #1e293b;
+}
+
+[data-theme="business"].dark .card::before {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+}
+
+[data-theme="business"].dark .card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: #60a5fa;
+}
+
+[data-theme="business"].dark .btn-primary {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+}
+
+[data-theme="business"].dark .btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.25);
+}
+
+[data-theme="business"].dark .btn-secondary {
+  border-color: var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+[data-theme="business"].dark .btn-secondary:hover {
+  border-color: #60a5fa;
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.05);
+}
+
+[data-theme="business"].dark .input {
+  background: #1e293b;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="business"].dark h1,
+[data-theme="business"].dark h2,
+[data-theme="business"].dark h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="business"].dark h1::after {
+  background: linear-gradient(90deg, #60a5fa, transparent);
+}
+
+[data-theme="business"].dark .badge-primary {
+  background: linear-gradient(135deg, #1e3a5a 0%, #172554 100%);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.2);
+}

@@ -1,0 +1,324 @@
+/* === 复古风 - 像素怀旧 === */
+:root[data-theme="retro"] {
+  --color-bg: #faf3e0;
+  --color-bg-elevated: #fff8e7;
+  --color-bg-subtle: #f5e6c8;
+  --color-text: #5c4033;
+  --color-text-secondary: #8b6914;
+  --color-text-tertiary: #a0826d;
+  --color-border: #d4c5a9;
+  --color-border-subtle: #e8dcc8;
+  
+  /* 主色 - 复古棕 */
+  --color-primary: #c17817;
+  --color-primary-hover: #a0522d;
+  --color-primary-subtle: #f5e6c8;
+  
+  /* 字体 */
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-sans: "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  /* 阴影 */
+  --shadow-subtle: 2px 2px 0px rgba(92, 64, 51, 0.1);
+  --shadow-soft: 3px 3px 0px rgba(92, 64, 51, 0.15);
+  --shadow-medium: 4px 4px 0px rgba(92, 64, 51, 0.2);
+}
+
+/* === 复古背景 - 噪点纹理 === */
+[data-theme="retro"] body {
+  background-color: #faf3e0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(193, 120, 23, 0.03) 2px,
+      rgba(193, 120, 23, 0.03) 4px
+    );
+  position: relative;
+}
+
+/* 噪点纹理效果 */
+[data-theme="retro"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9997;
+  animation: retro-noise 0.5s steps(5) infinite;
+}
+
+@keyframes retro-noise {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, -5%); }
+  40% { transform: translate(-10%, 5%); }
+  60% { transform: translate(5%, -10%); }
+  80% { transform: translate(-5%, 15%); }
+  100% { transform: translate(10%, 5%); }
+}
+
+/* 复古装饰边框 */
+[data-theme="retro"] body::after {
+  content: '';
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 2px solid rgba(193, 120, 23, 0.1);
+  pointer-events: none;
+  z-index: 9996;
+}
+
+/* === 复古卡片 === */
+[data-theme="retro"] .card {
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0px rgba(92, 64, 51, 0.15);
+  background: #fff8e7;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡片上的复古装饰 */
+[data-theme="retro"] .card::before {
+  content: '❦';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: #c17817;
+  opacity: 0.2;
+}
+
+[data-theme="retro"] .card:hover {
+  box-shadow: 4px 4px 0px rgba(92, 64, 51, 0.2);
+  transform: translate(-1px, -1px);
+  border-color: #c17817;
+}
+
+/* === 复古按钮 === */
+[data-theme="retro"] .btn-primary {
+  background: #c17817;
+  border: 2px solid #8b6914;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0px rgba(139, 105, 20, 0.3);
+  position: relative;
+  padding-left: 35px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 按钮上的复古装饰 */
+[data-theme="retro"] .btn-primary::before {
+  content: '◆';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+[data-theme="retro"] .btn-primary:hover {
+  background: #a0522d;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(139, 105, 20, 0.4);
+}
+
+/* 次要按钮 */
+[data-theme="retro"] .btn-secondary {
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: #fff8e7;
+  box-shadow: 2px 2px 0px rgba(92, 64, 51, 0.1);
+  position: relative;
+  padding-left: 35px;
+}
+
+[data-theme="retro"] .btn-secondary::before {
+  content: '◇';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+[data-theme="retro"] .btn-secondary:hover {
+  background: #faf3e0;
+  border-color: #c17817;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px rgba(92, 64, 51, 0.15);
+}
+
+/* === 复古输入框 === */
+[data-theme="retro"] .input {
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: #fff8e7;
+  font-family: var(--font-mono);
+  padding-left: 35px;
+}
+
+[data-theme="retro"] .input::before {
+  content: '▸';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c17817;
+  opacity: 0.5;
+}
+
+[data-theme="retro"] .input:focus {
+  border-color: #c17817;
+  box-shadow: 2px 2px 0px rgba(193, 120, 23, 0.2);
+  transform: translate(-1px, -1px);
+}
+
+/* === 复古标题 === */
+[data-theme="retro"] h1,
+[data-theme="retro"] h2,
+[data-theme="retro"] h3 {
+  color: #5c4033;
+  text-shadow: 1px 1px 0px rgba(193, 120, 23, 0.2);
+}
+
+[data-theme="retro"] h1::after,
+[data-theme="retro"] h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #c17817,
+    #c17817 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+/* === 复古徽章 === */
+[data-theme="retro"] .badge {
+  border: 1px solid var(--color-border);
+  box-shadow: 1px 1px 0px rgba(92, 64, 51, 0.1);
+}
+
+[data-theme="retro"] .badge-primary {
+  background: #f5e6c8;
+  color: #c17817;
+  border: 1px solid #c17817;
+}
+
+/* === 确保内容在背景之上 === */
+[data-theme="retro"] main,
+[data-theme="retro"] .container,
+[data-theme="retro"] #__next {
+  position: relative;
+  z-index: 10;
+}
+
+/* === 深色模式 - 复古暗棕（老胶片暗色）=== */
+:root[data-theme="retro"].dark {
+  --color-bg: #1a1410;
+  --color-bg-elevated: #251e18;
+  --color-bg-subtle: #1f1814;
+  --color-text: #e8ddd0;
+  --color-text-secondary: #b5a68e;
+  --color-text-tertiary: #8a7a60;
+  --color-border: #3d3020;
+  --color-border-subtle: #2a2218;
+  --color-primary: #d4943a;
+  --color-primary-hover: #e0a84c;
+  --color-primary-subtle: #2a2010;
+}
+
+[data-theme="retro"].dark body {
+  background-color: #1a1410;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(212, 148, 58, 0.04) 2px,
+      rgba(212, 148, 58, 0.04) 4px
+    );
+}
+
+[data-theme="retro"].dark body::before {
+  opacity: 0.02;
+}
+
+[data-theme="retro"].dark body::after {
+  border-color: rgba(212, 148, 58, 0.08);
+}
+
+[data-theme="retro"].dark .card {
+  border-color: var(--color-border);
+  background: #251e18;
+  box-shadow: 3px 3px 0px rgba(212, 148, 58, 0.08);
+}
+
+[data-theme="retro"].dark .card::before {
+  color: #d4943a;
+  opacity: 0.15;
+}
+
+[data-theme="retro"].dark .card:hover {
+  box-shadow: 4px 4px 0px rgba(212, 148, 58, 0.12);
+  border-color: #d4943a;
+}
+
+[data-theme="retro"].dark .btn-primary {
+  background: #d4943a;
+  border-color: #8b6914;
+  box-shadow: 2px 2px 0px rgba(139, 105, 20, 0.2);
+}
+
+[data-theme="retro"].dark .btn-primary:hover {
+  background: #e0a84c;
+  box-shadow: 3px 3px 0px rgba(139, 105, 20, 0.3);
+}
+
+[data-theme="retro"].dark .btn-secondary {
+  border-color: var(--color-border);
+  background: #251e18;
+  color: var(--color-text-secondary);
+  box-shadow: 2px 2px 0px rgba(92, 64, 51, 0.06);
+}
+
+[data-theme="retro"].dark .btn-secondary:hover {
+  background: var(--color-bg-subtle);
+  border-color: #d4943a;
+}
+
+[data-theme="retro"].dark .input {
+  background: #251e18;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="retro"].dark h1,
+[data-theme="retro"].dark h2,
+[data-theme="retro"].dark h3 {
+  color: #e8ddd0;
+  text-shadow: 1px 1px 0px rgba(212, 148, 58, 0.15);
+}
+
+[data-theme="retro"].dark .badge-primary {
+  background: var(--color-primary-subtle);
+  color: #d4943a;
+  border-color: #d4943a;
+}
